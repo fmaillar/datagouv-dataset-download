@@ -242,7 +242,34 @@ Enfin, cataloguer ce qui doit rester distant :
 
 Les fichiers `remote-resources-catalog.tsv` et `.jsonl` enregistrent le dataset, la ressource, le titre, l’URL, le format, le MIME, le chemin prévu et le résultat de la sonde. Ils rendent les exclusions explicites plutôt que silencieuses.
 
-## 8. Résultats de la campagne de référence
+## 8. Figer une campagne auditable
+
+Après la dernière vérification rapide, créer un snapshot en donnant un identifiant qui ne sera jamais réutilisé :
+
+```bash
+./snapshot-run.sh 2026-09-05_2026-09-06
+```
+
+Le script refuse d’écraser un dossier existant et crée sous `/mnt/data/datasets/catalogs/runs/<run_id>/` :
+
+- `run-metadata.json` : dates, hôte, système, versions, commits, stockage et compteurs ;
+- `dataset-inventory.tsv` : scripts, destinations et statuts agrégés pour chaque ID ;
+- `unresolved-resources.tsv` : anomalies encore ouvertes ;
+- `repository/` : copie exacte des fichiers de méthode présents dans le dépôt ;
+- `evidence/logs/` : journaux, rapports et catalogues de la campagne ;
+- `SHA256SUMS` : empreintes de toutes les preuves du snapshot ;
+- `SNAPSHOT_COMPLETE` : marqueur écrit uniquement à la fin.
+
+Les données brutes ne sont pas recopiées. Le snapshot enregistre leur volume et leur nombre de fichiers ; les empreintes disponibles restent dans les rapports de vérification. Contrôler l’intégrité du paquet :
+
+```bash
+cd /mnt/data/datasets/catalogs/runs/2026-09-05_2026-09-06
+sha256sum -c SHA256SUMS
+```
+
+Un dépôt Git marqué `dirty` n’invalide pas le snapshot : cet état est déclaré dans `run-metadata.json` et la copie exacte du working tree est conservée sous `repository/`. Pour une publication formelle, préférer néanmoins un commit propre avant la capture finale.
+
+## 9. Résultats de la campagne de référence
 
 La première vérification complète du 6 septembre 2026 a produit :
 
@@ -270,7 +297,7 @@ Au total, environ **428 ressources** ont été réparées. L’archive atteignai
 
 Ces nombres sont un instantané, pas une propriété permanente du catalogue : les producteurs peuvent ajouter, remplacer ou retirer des ressources.
 
-## 9. Limites et règles d’interprétation
+## 10. Limites et règles d’interprétation
 
 - Les métadonnées `filesize` et `checksum` peuvent être absentes ou périmées.
 - Une URL externe peut changer de contenu sans changement d’ID.
@@ -281,7 +308,7 @@ Ces nombres sont un instantané, pas une propriété permanente du catalogue : l
 - Le SHA-256 local assure la stabilité future de l’archive, mais ne prouve l’identité avec la source que lorsqu’une empreinte distante fiable existe.
 - `raw/` doit rester immuable ; toute normalisation appartient à un futur répertoire `processed/`.
 
-## 10. Checklist d’une nouvelle campagne
+## 11. Checklist d’une nouvelle campagne
 
 ```text
 [ ] Archiver les anciens rapports avec un horodatage
@@ -296,6 +323,7 @@ Ces nombres sont un instantané, pas une propriété permanente du catalogue : l
 [ ] Lancer verify-downloads.sh et conserver le rapport complet
 [ ] Auditer puis réparer uniquement les absences bornées
 [ ] Sonder et cataloguer les services/URL non archivés
+[ ] Créer le snapshot de campagne et valider SHA256SUMS
 [ ] Mettre en quarantaine plutôt que supprimer
 [ ] Consigner date, version du CLI, volumes et résultats finaux
 ```
