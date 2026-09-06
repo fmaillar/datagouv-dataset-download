@@ -23,8 +23,14 @@ REPO = Path(__file__).resolve().parents[2]
 DOWNLOAD_DIR = REPO / "downloads"
 DATASET_ROOT = Path("/mnt/data/datasets")
 LOG_ROOT = DATASET_ROOT / "logs"
-RUN_ROOT = DATASET_ROOT / "catalogs" / "runs"
+CATALOG_ROOT = DATASET_ROOT / "catalogs"
+RUN_ROOT = CATALOG_ROOT / "runs"
 VERIFY_REPORT = LOG_ROOT / "verification-downloads.tsv"
+DUPLICATE_ARTIFACTS = (
+    "duplicate-summary.json",
+    "exact-duplicate-files.tsv",
+    "exact-duplicate-groups.tsv",
+)
 ENTRY_RE = re.compile(r'^download\s+(\S+)\s+"([^"]+)"')
 ROOT_RE = re.compile(r'^ROOT="([^"]+)"')
 
@@ -113,6 +119,9 @@ def main() -> int:
         parser.error("run_id contient des caractères non autorisés")
     if not VERIFY_REPORT.is_file():
         parser.error(f"rapport de vérification absent : {VERIFY_REPORT}")
+    missing_artifacts = [name for name in DUPLICATE_ARTIFACTS if not (CATALOG_ROOT / name).is_file()]
+    if missing_artifacts:
+        parser.error("catalogues de doublons absents : " + ", ".join(missing_artifacts))
 
     run_dir = RUN_ROOT / args.run_id
     if run_dir.exists():
@@ -122,6 +131,10 @@ def main() -> int:
     run_dir.mkdir(parents=True)
     try:
         shutil.copytree(LOG_ROOT, evidence_dir / "logs", copy_function=shutil.copy2)
+        duplicate_dir = evidence_dir / "duplicates"
+        duplicate_dir.mkdir(parents=True)
+        for name in DUPLICATE_ARTIFACTS:
+            shutil.copy2(CATALOG_ROOT / name, duplicate_dir / name)
         copy_repository(repository_dir)
 
         entries = parse_entries()
@@ -205,6 +218,7 @@ def main() -> int:
                 "Checksums in SHA256SUMS cover snapshot evidence, not raw datasets.",
                 "Verification metadata may change after this snapshot.",
                 "Repository working-tree files are copied under repository/.",
+                "Exact duplicate inventories are copied under evidence/duplicates/.",
             ],
         }
         (run_dir / "run-metadata.json").write_text(

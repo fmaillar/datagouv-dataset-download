@@ -304,7 +304,7 @@ Forcer exceptionnellement une relecture complète :
 
 Cette commande relit toute l’archive et peut durer plusieurs heures. Elle n’est normalement pas nécessaire. Le scanner ne modifie jamais `raw/` ; `mutation_performed` reste à `false` dans le résumé. Ne pas supprimer automatiquement les variantes CSV, JSON, Parquet, GPKG ou SQL : elles peuvent représenter les mêmes objets sans être des doublons binaires.
 
-La campagne de référence a trouvé 323 groupes, 975 entrées et 67 groupes traversant plusieurs datasets. Le gain maximal estimé était de 7,36 Gio sur 772 Go, insuffisant pour justifier immédiatement une déduplication physique.
+La campagne finale a trouvé 326 groupes, 981 entrées et 73 groupes traversant plusieurs datasets. Le gain maximal estimé était de 7,36 Gio sur 773 Gio logiques, insuffisant pour justifier une déduplication physique.
 
 ## 9. Figer une campagne auditable
 
@@ -320,7 +320,8 @@ Le script refuse d’écraser un dossier existant et crée sous `/mnt/data/datas
 - `dataset-inventory.tsv` : scripts, destinations et statuts agrégés pour chaque ID ;
 - `unresolved-resources.tsv` : anomalies encore ouvertes ;
 - `repository/` : copie exacte des fichiers de méthode présents dans le dépôt ;
-- `evidence/logs/` : journaux, rapports et catalogues de la campagne ;
+- `evidence/logs/` : journaux et rapports de la campagne ;
+- `evidence/duplicates/` : résumé et inventaires détaillés des doublons exacts ;
 - `SHA256SUMS` : empreintes de toutes les preuves du snapshot ;
 - `SNAPSHOT_COMPLETE` : marqueur écrit uniquement à la fin.
 
