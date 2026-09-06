@@ -26,14 +26,14 @@ Le CLI propose notamment `search`, `dataset`, `resources`, `metadata`, `stats`, 
 ## Organisation
 
 ```text
-download-<domaine>-lotN.sh       manifestes de datasets
+downloads/<domaine>/download-<domaine>-lotN.sh  manifestes de datasets
 orchestration/download-all.sh    exécution séquentielle
 orchestration/download-all-parallel.sh  exécution parallèle
 tools/verify/verify-downloads.{sh,py}  contrôle d’intégrité
 tools/repair/repair-downloads.{sh,py}  audit et réparation ciblée
 tools/catalog/build-remote-catalog.{sh,py}  catalogue des services non archivables
 tools/fouille-datagouv.sh         exemple de campagne de recherche
-CODEX_CONTEXT_DATAGOUV_M710S.md  décisions et IDs structurants initiaux
+README.md                        politique et procédure reproductible
 ```
 
 Les sorties sont séparées du dépôt :
@@ -56,7 +56,7 @@ Utiliser exclusivement le CLI local. Une fouille commence par des requêtes simp
 /home/fgm/.local/bin/datagouv resources <dataset_id> --json
 ```
 
-`fouille-datagouv.sh` illustre une fouille géospatiale et redirige les résultats dans un journal. C’est un fragment Bash sans shebang ; l’exécuter ainsi :
+`tools/fouille-datagouv.sh` illustre une fouille géospatiale et redirige les résultats dans un journal. L’exécuter depuis la racine du dépôt :
 
 ```bash
 bash tools/fouille-datagouv.sh
@@ -88,7 +88,7 @@ Le premier argument est l’ID immuable du dataset ; le second est son classemen
 Contrôler les doublons :
 
 ```bash
-rg --no-filename '^download ' download-*.sh \
+rg --no-filename '^download ' downloads --glob 'download-*.sh' \
   | awk '{print $2}' | sort | uniq -d
 ```
 

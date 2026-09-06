@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository is a collection of Bash download manifests for archiving selected data.gouv.fr datasets. Top-level `download-<domain>.sh` scripts group downloads by domain; larger domains are split into `-lot1`, `-lot2`, and later batches. `CODEX_CONTEXT_DATAGOUV_M710S.md` documents the archive policy, target host, directory layout, and known dataset IDs.
+This repository is a collection of Bash download manifests for archiving selected data.gouv.fr datasets. Manifests live in `downloads/<domain>/`; larger domains are split into `-lot1`, `-lot2`, and later batches. Global launchers are in `orchestration/`, while verification, repair, catalog, snapshot, and duplicate-analysis utilities are grouped below `tools/`. `README.md` documents the archive policy and reproducible workflow.
 
 Downloaded data is not stored in the repository. Scripts write immutable source files below `/mnt/data/datasets/raw/<domain>/` and logs below `/mnt/data/datasets/logs/`. Keep generated data, logs, and temporary files out of Git.
 
@@ -11,7 +11,7 @@ Downloaded data is not stored in the repository. Scripts write immutable source 
 There is no build step or package manager. Validate all scripts without downloading data:
 
 ```bash
-bash -n download-*.sh
+find downloads orchestration tools -type f -name '*.sh' -print0 | xargs -0 -n1 bash -n
 ```
 
 Run a batch explicitly when the host has the `datagouv` CLI and `/mnt/data` storage configured:
@@ -21,7 +21,7 @@ bash downloads/socio-economie/download-socio-economie-lot2.sh
 tail -f /mnt/data/datasets/logs/socio-economie-lot2-download.log
 ```
 
-Use `shellcheck download-*.sh` when ShellCheck is available; no repository-specific configuration currently exists.
+Use `find downloads orchestration tools -type f -name '*.sh' -print0 | xargs -0 shellcheck` when ShellCheck is available; no repository-specific configuration currently exists.
 
 ## Coding Style & Naming Conventions
 
@@ -35,4 +35,4 @@ Syntax validation is the required baseline. For behavior changes, run the smalle
 
 ## Commit & Pull Request Guidelines
 
-History currently contains only the `Init` commit, so no established convention exists. Use short, imperative subjects such as `Add cadastral dataset batch`. Pull requests should identify affected domains/lots, explain dataset additions or removals, report `bash -n` results, and call out storage impact or known remote failures. Link relevant data.gouv.fr dataset pages or issues when IDs change.
+Use short, imperative subjects consistent with recent history, such as `Add cadastral dataset batch` or `Reorganize download scripts`. Pull requests should identify affected domains/lots, explain dataset additions or removals, report syntax and ShellCheck results, and call out storage impact or known remote failures. Link relevant data.gouv.fr dataset pages or issues when IDs change.

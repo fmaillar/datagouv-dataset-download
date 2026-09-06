@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 {
   echo "===== limites administratives ====="
   datagouv search "limites administratives" --limit 1000
