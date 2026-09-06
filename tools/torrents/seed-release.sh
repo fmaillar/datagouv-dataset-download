@@ -10,10 +10,10 @@ RELEASE="$DATASET_ROOT/releases/$RELEASE_ID"
 TORRENTS="$DATASET_ROOT/torrents/$RELEASE_ID"
 
 if [[ ! "$RELEASE_ID" =~ ^[A-Za-z0-9._+-]+$ ]] || [[ ! -d "$RELEASE/data" ]]; then
-    echo "Usage : $0 <release_id> [--execute|--start]" >&2
+    echo "Usage : $0 <release_id> [--execute|--verify-only|--start]" >&2
     exit 2
 fi
-if [[ "$ACTION" != "" && "$ACTION" != "--execute" && "$ACTION" != "--start" ]]; then
+if [[ "$ACTION" != "" && "$ACTION" != "--execute" && "$ACTION" != "--verify-only" && "$ACTION" != "--start" ]]; then
     echo "Action invalide : $ACTION" >&2
     exit 2
 fi
@@ -23,6 +23,7 @@ if [[ ! "$UPLOAD_KBPS" =~ ^[1-9][0-9]*$ ]]; then
 fi
 command -v transmission-remote >/dev/null || { echo "transmission-remote est requis" >&2; exit 2; }
 command -v transmission-show >/dev/null || { echo "transmission-show est requis" >&2; exit 2; }
+command -v jq >/dev/null || { echo "jq est requis" >&2; exit 2; }
 [[ -f "$TORRENTS/SHA256SUMS" ]] || { echo "SHA256SUMS absent" >&2; exit 2; }
 (cd "$TORRENTS" && sha256sum -c SHA256SUMS) || exit 1
 
@@ -36,7 +37,7 @@ echo "Répertoire des données : $RELEASE/data"
 echo "Torrents : ${#torrent_files[@]}"
 echo "Plafond upload au démarrage : $UPLOAD_KBPS kB/s"
 if [[ -z "$ACTION" ]]; then
-    echo "Simulation : --execute ajoute en pause et vérifie; --start démarre les torrents déjà ajoutés."
+    echo "Simulation : --execute ajoute en pause; --verify-only vérifie; --start partage."
     exit 0
 fi
 "${remote[@]}" --session-info >/dev/null || { echo "Démon Transmission inaccessible" >&2; exit 1; }
@@ -49,9 +50,25 @@ if [[ "$ACTION" == "--execute" ]]; then
         magnet="$(transmission-show --magnet "$torrent")"
         hash="${magnet#*urn:btih:}"
         hash="${hash%%&*}"
-        "${remote[@]}" --torrent "$hash" --stop --verify || exit 1
+        "${remote[@]}" --torrent "$hash" --stop || exit 1
     done
-    echo "Ajout terminé. Attendre la fin des vérifications avant --start."
+    echo "Ajout terminé. Lancer --verify-only."
+elif [[ "$ACTION" == "--verify-only" ]]; then
+    for torrent in "${torrent_files[@]}"; do
+        magnet="$(transmission-show --magnet "$torrent")"
+        hash="${magnet#*urn:btih:}"
+        hash="${hash%%&*}"
+        "${remote[@]}" --torrent "$hash" --stop || exit 1
+        "${remote[@]}" --torrent "$hash" --verify || exit 1
+        sleep 1
+        state="$("${remote[@]}" --json --torrent "$hash" --info)"
+        if ! jq -e '.arguments.torrents[0] | (.status == 1 or .status == 2 or .haveValid > 0 or .haveUnchecked > 0)' <<<"$state" >/dev/null; then
+            echo "ERREUR : vérification non démarrée pour $(basename "$torrent")" >&2
+            exit 1
+        fi
+        echo "Vérification lancée : $(basename "$torrent")"
+    done
+    echo "Vérifications demandées. Contrôler que tous les torrents atteignent 100 %."
 else
     "${remote[@]}" --dht --portmap --utp --uplimit "$UPLOAD_KBPS"
     for torrent in "${torrent_files[@]}"; do

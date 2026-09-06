@@ -401,6 +401,8 @@ Préparer Transmission sans démarrer le partage, puis le démarrer séparément
 ./tools/torrents/seed-release.sh datagouv-2026-09-06-reviewed-final-v1
 ./tools/torrents/seed-release.sh datagouv-2026-09-06-reviewed-final-v1 --execute
 # après la fin des vérifications :
+./tools/torrents/seed-release.sh datagouv-2026-09-06-reviewed-final-v1 --verify-only
+# lorsque les 14 torrents affichent 100 % :
 ./tools/torrents/seed-release.sh datagouv-2026-09-06-reviewed-final-v1 --start
 ```
 
