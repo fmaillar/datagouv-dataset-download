@@ -32,6 +32,8 @@ orchestration/download-all-parallel.sh  exécution parallèle
 tools/verify/verify-downloads.{sh,py}  contrôle d’intégrité
 tools/repair/repair-downloads.{sh,py}  audit et réparation ciblée
 tools/migrate/migrate-destinations.{sh,py}  migration après renommage
+tools/licenses/audit-licenses.{sh,py}  audit avant redistribution
+tools/torrents/                    préparation et création des torrents
 tools/catalog/build-remote-catalog.{sh,py}  catalogue des services non archivables
 tools/fouille-datagouv.sh         exemple de campagne de recherche
 README.md                        politique et procédure reproductible
@@ -306,7 +308,35 @@ Cette commande relit toute l’archive et peut durer plusieurs heures. Elle n’
 
 La campagne finale a trouvé 326 groupes, 981 entrées et 73 groupes traversant plusieurs datasets. Le gain maximal estimé était de 7,36 Gio sur 773 Gio logiques, insuffisant pour justifier une déduplication physique.
 
-## 9. Figer une campagne auditable
+## 9. Auditer les licences avant redistribution
+
+Avant de publier une copie, inventorier la licence, le producteur, la page source
+et la date de mise à jour de chaque dataset :
+
+```bash
+./tools/licenses/audit-licenses.sh --workers 12
+```
+
+Les sorties `license-audit.tsv`, `license-audit.jsonl` et
+`license-audit-summary.json` sont écrites dans `catalogs/`. Le classement
+automatique sépare attribution, domaine public, partage à l’identique, licence
+inconnue et accès non ouvert. Le signal de données personnelles est une
+heuristique imposant une revue humaine ; il ne constitue pas une conclusion
+juridique. Aucun torrent ne doit être publié uniquement sur la foi de cet audit.
+
+Préparer ensuite une release conservatrice par liens physiques, sans recopier
+les données, puis générer un torrent sans tracker par domaine :
+
+```bash
+./tools/torrents/prepare-release.sh datagouv-2026-09-06 --execute
+./tools/torrents/create-torrents.sh datagouv-2026-09-06
+```
+
+La release exclut les licences à revoir, les accès non ouverts et tout dataset
+signalé par l'heuristique de données personnelles. Les torrents restent marqués
+comme non approuvés et ne doivent pas être publiés avant revue humaine.
+
+## 10. Figer une campagne auditable
 
 Après la dernière vérification rapide, créer un snapshot en donnant un identifiant qui ne sera jamais réutilisé :
 
@@ -322,6 +352,7 @@ Le script refuse d’écraser un dossier existant et crée sous `/mnt/data/datas
 - `repository/` : copie exacte des fichiers de méthode présents dans le dépôt ;
 - `evidence/logs/` : journaux et rapports de la campagne ;
 - `evidence/duplicates/` : résumé et inventaires détaillés des doublons exacts ;
+- `evidence/licenses/` : audit des licences et signaux de revue humaine ;
 - `SHA256SUMS` : empreintes de toutes les preuves du snapshot ;
 - `SNAPSHOT_COMPLETE` : marqueur écrit uniquement à la fin.
 
@@ -334,7 +365,7 @@ sha256sum -c SHA256SUMS
 
 Un dépôt Git marqué `dirty` n’invalide pas le snapshot : cet état est déclaré dans `run-metadata.json` et la copie exacte du working tree est conservée sous `repository/`. Pour une publication formelle, préférer néanmoins un commit propre avant la capture finale.
 
-## 10. Résultats de la campagne de référence
+## 11. Résultats de la campagne de référence
 
 La première vérification complète du 6 septembre 2026 a produit :
 
@@ -362,7 +393,7 @@ Au total, environ **428 ressources** ont été réparées. L’archive atteignai
 
 Ces nombres sont un instantané, pas une propriété permanente du catalogue : les producteurs peuvent ajouter, remplacer ou retirer des ressources.
 
-## 11. Limites et règles d’interprétation
+## 12. Limites et règles d’interprétation
 
 - Les métadonnées `filesize` et `checksum` peuvent être absentes ou périmées.
 - Une URL externe peut changer de contenu sans changement d’ID.
@@ -373,7 +404,7 @@ Ces nombres sont un instantané, pas une propriété permanente du catalogue : l
 - Le SHA-256 local assure la stabilité future de l’archive, mais ne prouve l’identité avec la source que lorsqu’une empreinte distante fiable existe.
 - `raw/` doit rester immuable ; toute normalisation appartient à un futur répertoire `processed/`.
 
-## 12. Checklist d’une nouvelle campagne
+## 13. Checklist d’une nouvelle campagne
 
 ```text
 [ ] Archiver les anciens rapports avec un horodatage
@@ -389,6 +420,7 @@ Ces nombres sont un instantané, pas une propriété permanente du catalogue : l
 [ ] Auditer puis réparer uniquement les absences bornées
 [ ] Sonder et cataloguer les services/URL non archivés
 [ ] Exécuter tools/duplicates/find-duplicates.sh et examiner les groupes inter-datasets
+[ ] Exécuter tools/licenses/audit-licenses.sh et revoir les licences et données personnelles
 [ ] Créer le snapshot de campagne et valider SHA256SUMS
 [ ] Mettre en quarantaine plutôt que supprimer
 [ ] Consigner date, version du CLI, volumes et résultats finaux

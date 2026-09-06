@@ -31,6 +31,11 @@ DUPLICATE_ARTIFACTS = (
     "exact-duplicate-files.tsv",
     "exact-duplicate-groups.tsv",
 )
+LICENSE_ARTIFACTS = (
+    "license-audit.jsonl",
+    "license-audit-summary.json",
+    "license-audit.tsv",
+)
 ENTRY_RE = re.compile(r'^download\s+(\S+)\s+"([^"]+)"')
 ROOT_RE = re.compile(r'^ROOT="([^"]+)"')
 
@@ -122,6 +127,9 @@ def main() -> int:
     missing_artifacts = [name for name in DUPLICATE_ARTIFACTS if not (CATALOG_ROOT / name).is_file()]
     if missing_artifacts:
         parser.error("catalogues de doublons absents : " + ", ".join(missing_artifacts))
+    missing_licenses = [name for name in LICENSE_ARTIFACTS if not (CATALOG_ROOT / name).is_file()]
+    if missing_licenses:
+        parser.error("catalogues de licences absents : " + ", ".join(missing_licenses))
 
     run_dir = RUN_ROOT / args.run_id
     if run_dir.exists():
@@ -135,6 +143,10 @@ def main() -> int:
         duplicate_dir.mkdir(parents=True)
         for name in DUPLICATE_ARTIFACTS:
             shutil.copy2(CATALOG_ROOT / name, duplicate_dir / name)
+        license_dir = evidence_dir / "licenses"
+        license_dir.mkdir(parents=True)
+        for name in LICENSE_ARTIFACTS:
+            shutil.copy2(CATALOG_ROOT / name, license_dir / name)
         copy_repository(repository_dir)
 
         entries = parse_entries()
@@ -219,6 +231,7 @@ def main() -> int:
                 "Verification metadata may change after this snapshot.",
                 "Repository working-tree files are copied under repository/.",
                 "Exact duplicate inventories are copied under evidence/duplicates/.",
+                "License audit artifacts are copied under evidence/licenses/.",
             ],
         }
         (run_dir / "run-metadata.json").write_text(

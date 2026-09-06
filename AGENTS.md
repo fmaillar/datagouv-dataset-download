@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository is a collection of Bash download manifests for archiving selected data.gouv.fr datasets. Manifests live in `downloads/<domain>/`; larger domains are split into `-lot1`, `-lot2`, and later batches. Global launchers are in `orchestration/`, while verification, repair, migration, catalog, snapshot, and duplicate-analysis utilities are grouped below `tools/`. `README.md` documents the archive policy and reproducible workflow.
+This repository is a collection of Bash download manifests for archiving selected data.gouv.fr datasets. Manifests live in `downloads/<domain>/`; larger domains are split into `-lot1`, `-lot2`, and later batches. Global launchers are in `orchestration/`, while verification, repair, migration, licensing, torrent preparation, catalog, snapshot, and duplicate-analysis utilities are grouped below `tools/`. `README.md` documents the archive policy and reproducible workflow.
 
 Downloaded data is not stored in the repository. Scripts write immutable source files below `/mnt/data/datasets/raw/<domain>/` and logs below `/mnt/data/datasets/logs/`. Keep generated data, logs, and temporary files out of Git.
 
