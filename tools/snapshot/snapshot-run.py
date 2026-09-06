@@ -40,6 +40,9 @@ PUBLICATION_REVIEW_ARTIFACTS = (
     "publication-review.jsonl",
     "publication-review-summary.json",
     "publication-review.tsv",
+    "publication-technical-scan.jsonl",
+    "publication-technical-scan-summary.json",
+    "publication-technical-scan.tsv",
 )
 ENTRY_RE = re.compile(r'^download\s+(\S+)\s+"([^"]+)"')
 ROOT_RE = re.compile(r'^ROOT="([^"]+)"')

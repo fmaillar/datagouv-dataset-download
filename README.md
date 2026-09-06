@@ -341,6 +341,32 @@ Les analyses préparatoires peuvent être conservées sous
 une décision qu'après validation explicite et ajout dans
 `reviews/publication-decisions.tsv`.
 
+Pour prioriser une revue volumineuse, inspecter en lecture seule les noms,
+en-têtes et premiers 256 Kio des fichiers et des petits membres d'archives :
+
+```bash
+./tools/licenses/scan-publication.sh
+```
+
+Les rapports `catalogs/publication-technical-scan.{tsv,jsonl}` et leur résumé
+proposent `APPROVE`, `HOLD` ou
+`EXCLUDE`. L'absence de signal ne prouve pas l'absence de données personnelles :
+ce résultat sert à constituer les lots et doit rester accompagné d'une
+recommandation motivée.
+
+Après validation explicite d'un mandat de revue, matérialiser les recommandations
+restantes en lots bornés et en décisions versionnées :
+
+```bash
+./tools/licenses/finalize-technical-review.sh \
+    --reviewer "Florian MAILLARD" --execute
+./tools/licenses/review-publication.sh
+```
+
+La préparation d'une release consulte ce dernier registre et ne retient que les
+datasets dont le statut final est `APPROVED`. Les entrées `HOLD`, `EXCLUDE` et
+les blocages automatiques ne peuvent donc pas entrer dans un nouveau torrent.
+
 Préparer ensuite une release conservatrice par liens physiques, sans recopier
 les données, puis générer un torrent sans tracker par domaine :
 

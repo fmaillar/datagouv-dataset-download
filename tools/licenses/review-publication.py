@@ -71,12 +71,12 @@ def load_decisions(path: Path) -> dict[str, dict[str, str]]:
 def automatic_status(row: dict[str, str], files: int) -> tuple[str, str]:
     if row["decision"] not in ELIGIBLE:
         return "BLOCKED_LICENSE_OR_ACCESS", row["note"]
-    if row["personal_data_signal"]:
-        return "REVIEW_PERSONAL_DATA", f"signal : {row['signal_terms']}"
-    if not row["producer"].strip():
-        return "REVIEW_ATTRIBUTION", "producteur absent des métadonnées"
     if files == 0:
         return "REVIEW_MISSING_FILES", "aucun fichier local complet"
+    if not row["producer"].strip():
+        return "REVIEW_ATTRIBUTION", "producteur absent des métadonnées"
+    if row["personal_data_signal"]:
+        return "REVIEW_PERSONAL_DATA", f"signal : {row['signal_terms']}"
     return "REVIEW_REQUIRED", "licence admissible; validation humaine requise"
 
 

@@ -17,6 +17,7 @@ REPO = Path(__file__).resolve().parents[2]
 DOWNLOAD_DIR = REPO / "downloads"
 DATASET_ROOT = Path("/mnt/data/datasets")
 AUDIT = DATASET_ROOT / "catalogs" / "license-audit.tsv"
+PUBLICATION_REVIEW = DATASET_ROOT / "catalogs" / "publication-review.tsv"
 ENTRY_RE = re.compile(r'^download\s+(\S+)\s+"([^"]+)"')
 ROOT_RE = re.compile(r'^ROOT="([^"]+)"')
 ELIGIBLE = {"ELIGIBLE_ATTRIBUTION", "ELIGIBLE_PUBLIC_DOMAIN", "ELIGIBLE_SHARE_ALIKE"}
@@ -46,16 +47,23 @@ def main() -> int:
         parser.error("release_id contient des caractères non autorisés")
     if not AUDIT.is_file():
         parser.error(f"audit absent : {AUDIT}")
+    if not PUBLICATION_REVIEW.is_file():
+        parser.error(f"revue de publication absente : {PUBLICATION_REVIEW}")
 
     with AUDIT.open(encoding="utf-8", newline="") as stream:
         audit = list(csv.DictReader(stream, delimiter="\t"))
+    with PUBLICATION_REVIEW.open(encoding="utf-8", newline="") as stream:
+        approved_ids = {
+            row["dataset_id"] for row in csv.DictReader(stream, delimiter="\t")
+            if row["final_status"] == "APPROVED"
+        }
     selected = {
         row["dataset_id"]: row
         for row in audit
         if (
             row["decision"] in ELIGIBLE
-            and not row["personal_data_signal"]
             and row["producer"].strip()
+            and row["dataset_id"] in approved_ids
         )
     }
     manifest = destinations()
@@ -130,8 +138,8 @@ def main() -> int:
             "release_id": args.release_id,
             "created_at": datetime.now().astimezone().isoformat(timespec="seconds"),
             "selection_policy": (
-                "eligible license, identified producer, and no automatic "
-                "personal-data signal"
+                "final publication status APPROVED, eligible license, identified "
+                "producer, with heuristic signals resolved by manual review"
             ),
             "datasets_selected": len(selected),
             "datasets_without_local_files": empty,
