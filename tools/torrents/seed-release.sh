@@ -8,6 +8,8 @@ UPLOAD_KBPS="${TRANSMISSION_UPLOAD_KBPS:-20000}"
 DATASET_ROOT="/mnt/data/datasets"
 RELEASE="$DATASET_ROOT/releases/$RELEASE_ID"
 TORRENTS="$DATASET_ROOT/torrents/$RELEASE_ID"
+STAGED_DATA="/mnt/data/torrents/datagouv-releases/$RELEASE_ID/data"
+SEED_DATA="${TRANSMISSION_DATA_DIR:-$STAGED_DATA}"
 
 if [[ ! "$RELEASE_ID" =~ ^[A-Za-z0-9._+-]+$ ]] || [[ ! -d "$RELEASE/data" ]]; then
     echo "Usage : $0 <release_id> [--execute|--verify-only|--start]" >&2
@@ -25,6 +27,11 @@ command -v transmission-remote >/dev/null || { echo "transmission-remote est req
 command -v transmission-show >/dev/null || { echo "transmission-show est requis" >&2; exit 2; }
 command -v jq >/dev/null || { echo "jq est requis" >&2; exit 2; }
 [[ -f "$TORRENTS/SHA256SUMS" ]] || { echo "SHA256SUMS absent" >&2; exit 2; }
+if [[ ! -d "$SEED_DATA" ]]; then
+    echo "Copie de seed absente : $SEED_DATA" >&2
+    echo "Exécuter d'abord stage-seed-data.sh avec sudo." >&2
+    exit 2
+fi
 (cd "$TORRENTS" && sha256sum -c SHA256SUMS) || exit 1
 
 remote=(transmission-remote "$RPC")
@@ -33,7 +40,7 @@ mapfile -t torrent_files < <(find "$TORRENTS" -maxdepth 1 -type f -name '*.torre
 (( ${#torrent_files[@]} > 0 )) || { echo "Aucun torrent" >&2; exit 2; }
 
 echo "RPC : $RPC"
-echo "Répertoire des données : $RELEASE/data"
+echo "Répertoire des données : $SEED_DATA"
 echo "Torrents : ${#torrent_files[@]}"
 echo "Plafond upload au démarrage : $UPLOAD_KBPS kB/s"
 if [[ -z "$ACTION" ]]; then
@@ -46,10 +53,11 @@ if [[ "$ACTION" == "--execute" ]]; then
     "${remote[@]}" --start-paused
     for torrent in "${torrent_files[@]}"; do
         echo "Ajout en pause : $(basename "$torrent")"
-        "${remote[@]}" --download-dir "$RELEASE/data" --add "$torrent" || exit 1
+        "${remote[@]}" --download-dir "$SEED_DATA" --add "$torrent" || exit 1
         magnet="$(transmission-show --magnet "$torrent")"
         hash="${magnet#*urn:btih:}"
         hash="${hash%%&*}"
+        "${remote[@]}" --torrent "$hash" --find "$SEED_DATA" || exit 1
         "${remote[@]}" --torrent "$hash" --stop || exit 1
     done
     echo "Ajout terminé. Lancer --verify-only."

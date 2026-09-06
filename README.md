@@ -398,6 +398,9 @@ Construire ensuite l'index public et les liens magnet :
 Préparer Transmission sans démarrer le partage, puis le démarrer séparément :
 
 ```bash
+./tools/torrents/stage-seed-data.sh datagouv-2026-09-06-reviewed-final-v1
+sudo ./tools/torrents/stage-seed-data.sh \
+    datagouv-2026-09-06-reviewed-final-v1 --execute
 ./tools/torrents/seed-release.sh datagouv-2026-09-06-reviewed-final-v1
 ./tools/torrents/seed-release.sh datagouv-2026-09-06-reviewed-final-v1 --execute
 # après la fin des vérifications :
@@ -405,6 +408,12 @@ Préparer Transmission sans démarrer le partage, puis le démarrer séparément
 # lorsque les 14 torrents affichent 100 % :
 ./tools/torrents/seed-release.sh datagouv-2026-09-06-reviewed-final-v1 --start
 ```
+
+La copie de seed est indépendante : le script refuse une destination existante,
+contrôle une réserve d'espace de 10 %, utilise les reflinks seulement si le
+système de fichiers les prend en charge, puis vérifie que les inodes diffèrent.
+Cette séparation empêche Transmission de modifier les liens physiques de la
+release et, par conséquent, les fichiers bruts.
 
 Le RPC vise `localhost:9091` par défaut. Utiliser `TRANSMISSION_RPC` pour une
 autre adresse et `TR_AUTH` pour les identifiants sans les exposer dans la ligne
