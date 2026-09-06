@@ -9,3 +9,19 @@ dataset_id	decision	reviewer	reviewed_at	rationale
 53699546a3a729239d204692	APPROVE	Florian MAILLARD	2026-09-06T22:26:27+02:00	Budget public agrégé; licence et producteur identifiés; aucun identifiant personnel observé dans les fichiers locaux.
 53699546a3a729239d204693	APPROVE	Florian MAILLARD	2026-09-06T22:26:27+02:00	Budget public agrégé; licence et producteur identifiés; aucun identifiant personnel observé dans les fichiers locaux.
 53699547a3a729239d204694	APPROVE	Florian MAILLARD	2026-09-06T22:26:27+02:00	Budget public agrégé; licence et producteur identifiés; aucun identifiant personnel observé dans les fichiers locaux.
+53699547a3a729239d204695	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Budget public agrégé; aucun identifiant individuel observé.
+53699980a3a729239d20527f	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Dotations budgétaires publiques agrégées; aucun identifiant individuel observé.
+53699980a3a729239d205280	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Emplois budgétaires agrégés; aucun identifiant individuel observé.
+53893653a3a7291ffe8c5034	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Budget public agrégé par nomenclature administrative; aucun identifiant individuel observé.
+555df4eac751df5c8dc98e0f	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Budget public agrégé 2012; redistribution sous ODbL avec attribution et partage à l'identique.
+555df757c751df5c8dc98e10	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Budget public agrégé 2013; redistribution sous ODbL avec attribution et partage à l'identique.
+55673898c751df5f9ee5726a	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Budget public agrégé 2014; redistribution sous ODbL avec attribution et partage à l'identique.
+5889d043a3a72974cbf0d5bb	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Missions budgétaires publiques agrégées; aucun identifiant individuel observé.
+5bbf72438b4c417355377505	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Indicateurs publics de performance budgétaire; aucun identifiant individuel observé.
+5bc49bb28b4c417a3c76e450	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Données financières d'opérateurs publics; noms d'organismes uniquement.
+5ea9515a7f6d609f43319267	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Résultats budgétaires publics agrégés; redistribution sous ODbL avec partage à l'identique.
+5f68c4ec23ac65f6fd8021e3	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Comptes communaux publics; identifiants SIREN/SIRET institutionnels, sans personne physique observée.
+5f68c4ed0a143d9ab88021e3	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Comptes départementaux publics et identifiants institutionnels.
+5f68c4ed0be7ff90225b6549	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Comptes régionaux publics; identifiants SIREN/SIRET institutionnels, sans personne physique observée.
+5f68c4edf94340bbc28021e3	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Comptes de groupements publics; identifiants SIREN/SIRET institutionnels, sans personne physique observée.
+6916717fd1613a14a77b95df	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Budget vert public agrégé; aucun identifiant individuel observé.

@@ -1,0 +1,17 @@
+dataset_id	recommendation	topic	license	producer	local_evidence	rationale
+53699547a3a729239d204695	APPROVE	budget-etat	fr-lo	Ministères économiques et financiers	1 fichier; nomenclature mission, programme, action et titre	Budget public agrégé; aucun identifiant individuel observé.
+53699980a3a729239d20527f	APPROVE	budget-etat	lov2	Ministères économiques et financiers	2 fichiers; dotations par ministère	Budget public agrégé; aucun identifiant individuel observé.
+53699980a3a729239d205280	APPROVE	budget-etat	lov2	Ministères économiques et financiers	2 fichiers; emplois agrégés par ministère	Emplois budgétaires agrégés; aucun identifiant individuel observé.
+53893653a3a7291ffe8c5034	APPROVE	budget-etat	lov2	Ministères économiques et financiers	7 fichiers; mission, ministère, programme, action, AE et CP	Budget public agrégé; aucun identifiant individuel observé.
+555df4eac751df5c8dc98e0f	APPROVE	budget-etat	odc-odbl	Cour des comptes	3 fichiers tableurs; consommations et mouvements de crédits 2012	Budget public agrégé; attribution et partage à l'identique requis.
+555df757c751df5c8dc98e10	APPROVE	budget-etat	odc-odbl	Cour des comptes	3 fichiers tableurs; consommations et mouvements de crédits 2013	Budget public agrégé; attribution et partage à l'identique requis.
+55673898c751df5f9ee5726a	APPROVE	budget-etat	odc-odbl	Cour des comptes	3 fichiers tableurs; consommations et mouvements de crédits 2014	Budget public agrégé; attribution et partage à l'identique requis.
+5889d043a3a72974cbf0d5bb	APPROVE	budget-education-recherche	lov2	Ministères de l'Éducation nationale	2 fichiers; missions interministérielles agrégées	Budget public agrégé; aucun identifiant individuel observé.
+5bbf72438b4c417355377505	APPROVE	budget-etat	lov2	Ministères économiques et financiers	2 fichiers; programmes, objectifs et indicateurs PLF 2019	Données de performance budgétaire; aucun identifiant individuel observé.
+5bc49bb28b4c417a3c76e450	APPROVE	budget-operateurs	lov2	Ministères économiques et financiers	8 fichiers; opérateurs publics et agrégats financiers	Noms d'organismes et données budgétaires; aucun identifiant individuel observé.
+5ea9515a7f6d609f43319267	APPROVE	budget-etat	odc-odbl	Cour des comptes	1 archive; tableaux et graphiques des résultats 2019	Budget public agrégé; attribution et partage à l'identique requis.
+5f68c4ec23ac65f6fd8021e3	APPROVE	comptes-collectivites	lov2	Observatoire des Finances et de la Gestion publique Locales	9 fichiers; communes, budgets, agrégats et montants	Identifiants SIREN/SIRET institutionnels; aucune personne physique observée.
+5f68c4ed0a143d9ab88021e3	APPROVE	comptes-collectivites	lov2	Observatoire des Finances et de la Gestion publique Locales	2 fichiers; départements, budgets, agrégats et montants	Identifiants institutionnels et comptes publics agrégés.
+5f68c4ed0be7ff90225b6549	APPROVE	comptes-collectivites	lov2	Observatoire des Finances et de la Gestion publique Locales	2 fichiers; régions, budgets, agrégats et montants	Identifiants SIREN/SIRET institutionnels; aucune personne physique observée.
+5f68c4edf94340bbc28021e3	APPROVE	comptes-collectivites	lov2	Observatoire des Finances et de la Gestion publique Locales	9 fichiers; groupements, budgets, agrégats et montants	Identifiants SIREN/SIRET institutionnels; aucune personne physique observée.
+6916717fd1613a14a77b95df	APPROVE	budget-vert	lov2	Ministères économiques et financiers	2 fichiers; programmes, actions et cotations environnementales	Budget public agrégé; aucun identifiant individuel observé.
