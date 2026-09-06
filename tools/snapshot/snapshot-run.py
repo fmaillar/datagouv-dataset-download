@@ -127,6 +127,10 @@ def main() -> int:
         default=datetime.now().astimezone().strftime("%Y%m%dT%H%M%S%z"),
         help="identifiant du snapshot, créé sous catalogs/runs/",
     )
+    parser.add_argument(
+        "--release-id",
+        help="copie les métadonnées et torrents de cette release dans les preuves",
+    )
     args = parser.parse_args()
     if not re.fullmatch(r"[A-Za-z0-9._+-]+", args.run_id):
         parser.error("run_id contient des caractères non autorisés")
@@ -144,6 +148,19 @@ def main() -> int:
     ]
     if missing_reviews:
         parser.error("revue de publication absente : " + ", ".join(missing_reviews))
+    release_dir: Path | None = None
+    torrent_dir: Path | None = None
+    if args.release_id:
+        if not re.fullmatch(r"[A-Za-z0-9._+-]+", args.release_id):
+            parser.error("release_id contient des caractères non autorisés")
+        release_dir = DATASET_ROOT / "releases" / args.release_id
+        torrent_dir = DATASET_ROOT / "torrents" / args.release_id
+        required_release = ["ATTRIBUTION.tsv", "README.md", "RELEASE.json"]
+        required_torrents = ["SHA256SUMS", *required_release]
+        missing_release = [name for name in required_release if not (release_dir / name).is_file()]
+        missing_torrents = [name for name in required_torrents if not (torrent_dir / name).is_file()]
+        if missing_release or missing_torrents or not list(torrent_dir.glob("*.torrent")):
+            parser.error("artefacts de release ou torrents incomplets")
 
     run_dir = RUN_ROOT / args.run_id
     if run_dir.exists():
@@ -169,6 +186,12 @@ def main() -> int:
             REPO / "reviews" / "publication-decisions.tsv",
             publication_dir / "publication-decisions.tsv",
         )
+        if release_dir is not None and torrent_dir is not None:
+            release_evidence = evidence_dir / "release"
+            release_evidence.mkdir(parents=True)
+            for name in ("ATTRIBUTION.tsv", "README.md", "RELEASE.json"):
+                shutil.copy2(release_dir / name, release_evidence / name)
+            shutil.copytree(torrent_dir, release_evidence / "torrents")
         copy_repository(repository_dir)
 
         entries = parse_entries()
@@ -239,6 +262,7 @@ def main() -> int:
                 "entries": len(entries),
                 "unique_dataset_ids": len(by_dataset),
             },
+            "release_id": args.release_id,
             "verification_statuses": dict(sorted(Counter(row["statut"] for row in verification).items())),
             "storage": {
                 "path": str(DATASET_ROOT),
@@ -255,6 +279,7 @@ def main() -> int:
                 "Exact duplicate inventories are copied under evidence/duplicates/.",
                 "License audit artifacts are copied under evidence/licenses/.",
                 "Publication review artifacts and decisions are copied under evidence/publication/.",
+                "When release_id is set, torrent files and release metadata are copied under evidence/release/.",
             ],
         }
         (run_dir / "run-metadata.json").write_text(

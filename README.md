@@ -397,6 +397,14 @@ Après la dernière vérification rapide, créer un snapshot en donnant un ident
 ./tools/snapshot/snapshot-run.sh 2026-09-05_2026-09-06
 ```
 
+Pour le snapshot d'une diffusion, joindre les torrents et métadonnées de la
+release sans recopier son répertoire `data/` :
+
+```bash
+./tools/snapshot/snapshot-run.sh 2026-09-06-release-final-v1 \
+    --release-id datagouv-2026-09-06-reviewed-final-v1
+```
+
 Le script refuse d’écraser un dossier existant et crée sous `/mnt/data/datasets/catalogs/runs/<run_id>/` :
 
 - `run-metadata.json` : dates, hôte, système, versions, commits, stockage et compteurs ;
