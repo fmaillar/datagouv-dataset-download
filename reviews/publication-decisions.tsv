@@ -25,3 +25,13 @@ dataset_id	decision	reviewer	reviewed_at	rationale
 5f68c4ed0be7ff90225b6549	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Comptes régionaux publics; identifiants SIREN/SIRET institutionnels, sans personne physique observée.
 5f68c4edf94340bbc28021e3	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Comptes de groupements publics; identifiants SIREN/SIRET institutionnels, sans personne physique observée.
 6916717fd1613a14a77b95df	APPROVE	Florian MAILLARD	2026-09-06T22:30:32+02:00	Budget vert public agrégé; aucun identifiant individuel observé.
+53ba4c07a3a729219b7bead3	APPROVE	Florian MAILLARD	2026-09-06T22:32:07+02:00	Données techniques de véhicules et émissions; aucun identifiant individuel détecté.
+540917e1a3a72959e0628f93	APPROVE	Florian MAILLARD	2026-09-06T22:32:07+02:00	Fréquentation touristique agrégée; aucun identifiant individuel détecté.
+5429829c88ee380327a59168	APPROVE	Florian MAILLARD	2026-09-06T22:32:07+02:00	Données sur les œuvres et leur distribution; aucun identifiant individuel sensible détecté.
+543408d888ee38736ab698a1	APPROVE	Florian MAILLARD	2026-09-06T22:32:07+02:00	Profil statistique agrégé du public des salles; aucun enregistrement individuel détecté.
+54340f3688ee387369b698a1	APPROVE	Florian MAILLARD	2026-09-06T22:32:07+02:00	Fréquentation cinématographique agrégée; aucun identifiant individuel détecté.
+5437e96d88ee387cb28f5e7d	APPROVE	Florian MAILLARD	2026-09-06T22:32:07+02:00	Classement d'œuvres et entrées agrégées; aucun identifiant individuel sensible détecté.
+5458f03bc751df46e6225d2e	APPROVE	Florian MAILLARD	2026-09-06T22:32:07+02:00	Inventaire de données publiques; aucun identifiant individuel détecté.
+5488088cc751df17b3a3fc15	APPROVE	Florian MAILLARD	2026-09-06T22:32:07+02:00	Nuitées touristiques agrégées; aucun identifiant individuel détecté.
+54881d6dc751df32f8a3fc15	APPROVE	Florian MAILLARD	2026-09-06T22:32:07+02:00	Adresses publiques d'établissements touristiques; aucun domicile personnel observé.
+55f0463d88ee3849f5a46ec1	APPROVE	Florian MAILLARD	2026-09-06T22:32:07+02:00	Mesures énergétiques agrégées; aucun identifiant individuel détecté.

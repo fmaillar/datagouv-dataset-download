@@ -1,0 +1,11 @@
+dataset_id	recommendation	topic	license	producer	local_evidence	rationale
+53ba4c07a3a729219b7bead3	APPROVE	emissions-vehicules	fr-lo	ADEME	16 fichiers; caractéristiques et émissions de véhicules	Données techniques de modèles commercialisés; aucun identifiant individuel détecté.
+540917e1a3a72959e0628f93	APPROVE	frequentation-touristique	fr-lo	Ville de Saint-Malo	1 fichier; fréquentation agrégée	Statistiques touristiques agrégées; aucun identifiant individuel détecté.
+5429829c88ee380327a59168	APPROVE	cinema-distribution	fr-lo	Centre national du cinéma et de l'image animée	2 fichiers; films et distribution	Œuvres et statistiques de diffusion; aucun identifiant individuel sensible détecté.
+543408d888ee38736ab698a1	APPROVE	cinema-public	fr-lo	Centre national du cinéma et de l'image animée	1 fichier; profil statistique du public	Profil agrégé du public; aucun enregistrement individuel détecté.
+54340f3688ee387369b698a1	APPROVE	cinema-frequentation	fr-lo	Centre national du cinéma et de l'image animée	1 fichier; fréquentation agrégée	Statistiques de fréquentation; aucun identifiant individuel détecté.
+5437e96d88ee387cb28f5e7d	APPROVE	cinema-succes	fr-lo	Centre national du cinéma et de l'image animée	1 fichier; succès cinématographiques	Classement d'œuvres et entrées agrégées; aucun identifiant individuel sensible détecté.
+5458f03bc751df46e6225d2e	APPROVE	inventaire-open-data	fr-lo	Etalab	1 fichier; inventaire indicatif de données publiques	Métadonnées de services publics; aucun identifiant individuel détecté.
+5488088cc751df17b3a3fc15	APPROVE	nuitees-campings	fr-lo	Ville de Saint-Malo	1 fichier; nuitées agrégées	Statistiques touristiques agrégées; aucun identifiant individuel détecté.
+54881d6dc751df32f8a3fc15	APPROVE	campings	fr-lo	Ville de Saint-Malo	3 fichiers; équipements et adresses publiques	Adresses d'établissements touristiques, sans domicile de personne observé.
+55f0463d88ee3849f5a46ec1	APPROVE	electricite	fr-lo	Réseau de Transport d'Électricité	9 fichiers; consommation, production, CO2 et échanges	Mesures énergétiques agrégées; aucun identifiant individuel détecté.
