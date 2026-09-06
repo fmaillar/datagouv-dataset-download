@@ -389,6 +389,26 @@ identifiant, jamais modifiée sur place. La création est reprenable : un torren
 existant et lisible par `transmission-show` est conservé, tandis qu'un fichier
 `.torrent.part` incomplet est recalculé.
 
+Construire ensuite l'index public et les liens magnet :
+
+```bash
+./tools/torrents/build-index.sh datagouv-2026-09-06-reviewed-final-v1
+```
+
+Préparer Transmission sans démarrer le partage, puis le démarrer séparément :
+
+```bash
+./tools/torrents/seed-release.sh datagouv-2026-09-06-reviewed-final-v1
+./tools/torrents/seed-release.sh datagouv-2026-09-06-reviewed-final-v1 --execute
+# après la fin des vérifications :
+./tools/torrents/seed-release.sh datagouv-2026-09-06-reviewed-final-v1 --start
+```
+
+Le RPC vise `localhost:9091` par défaut. Utiliser `TRANSMISSION_RPC` pour une
+autre adresse et `TR_AUTH` pour les identifiants sans les exposer dans la ligne
+de commande. Le plafond initial vaut 20 000 kB/s; le modifier avec
+`TRANSMISSION_UPLOAD_KBPS`. Ne jamais exposer le RPC Transmission sur Internet.
+
 ## 10. Figer une campagne auditable
 
 Après la dernière vérification rapide, créer un snapshot en donnant un identifiant qui ne sera jamais réutilisé :
