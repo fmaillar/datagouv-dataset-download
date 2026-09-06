@@ -18,6 +18,7 @@ DOWNLOAD_DIR = REPO / "downloads"
 DATASET_ROOT = Path("/mnt/data/datasets")
 AUDIT = DATASET_ROOT / "catalogs" / "license-audit.tsv"
 PUBLICATION_REVIEW = DATASET_ROOT / "catalogs" / "publication-review.tsv"
+PUBLICATION_REVIEW_SUMMARY = DATASET_ROOT / "catalogs" / "publication-review-summary.json"
 ENTRY_RE = re.compile(r'^download\s+(\S+)\s+"([^"]+)"')
 ROOT_RE = re.compile(r'^ROOT="([^"]+)"')
 ELIGIBLE = {"ELIGIBLE_ATTRIBUTION", "ELIGIBLE_PUBLIC_DOMAIN", "ELIGIBLE_SHARE_ALIKE"}
@@ -49,6 +50,11 @@ def main() -> int:
         parser.error(f"audit absent : {AUDIT}")
     if not PUBLICATION_REVIEW.is_file():
         parser.error(f"revue de publication absente : {PUBLICATION_REVIEW}")
+    if not PUBLICATION_REVIEW_SUMMARY.is_file():
+        parser.error(f"résumé de revue absent : {PUBLICATION_REVIEW_SUMMARY}")
+    review_summary = json.loads(PUBLICATION_REVIEW_SUMMARY.read_text(encoding="utf-8"))
+    if not review_summary.get("review_complete"):
+        parser.error("revue de publication incomplète")
 
     with AUDIT.open(encoding="utf-8", newline="") as stream:
         audit = list(csv.DictReader(stream, delimiter="\t"))
@@ -147,7 +153,7 @@ def main() -> int:
             "logical_bytes": logical_bytes,
             "decisions": dict(sorted(Counter(row["decision"] for row in selected.values()).items())),
             "embedded_attribution_by_domain": True,
-            "legal_review_complete": False,
+            "legal_review_complete": True,
             "publication_approved": False,
         }
         (release / "RELEASE.json").write_text(

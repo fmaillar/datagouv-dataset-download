@@ -366,6 +366,9 @@ restantes en lots bornés et en décisions versionnées :
 La préparation d'une release consulte ce dernier registre et ne retient que les
 datasets dont le statut final est `APPROVED`. Les entrées `HOLD`, `EXCLUDE` et
 les blocages automatiques ne peuvent donc pas entrer dans un nouveau torrent.
+Elle refuse également de continuer tant que `review_complete` n'est pas vrai
+dans le résumé de revue. Ce contrôle clôt la revue, mais ne vaut pas autorisation
+de publication sur un service externe.
 
 Préparer ensuite une release conservatrice par liens physiques, sans recopier
 les données, puis générer un torrent sans tracker par domaine :
