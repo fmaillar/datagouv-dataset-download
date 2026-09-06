@@ -52,7 +52,11 @@ def main() -> int:
     selected = {
         row["dataset_id"]: row
         for row in audit
-        if row["decision"] in ELIGIBLE and not row["personal_data_signal"]
+        if (
+            row["decision"] in ELIGIBLE
+            and not row["personal_data_signal"]
+            and row["producer"].strip()
+        )
     }
     manifest = destinations()
     release = DATASET_ROOT / "releases" / args.release_id
@@ -60,6 +64,7 @@ def main() -> int:
         parser.error(f"release déjà existante : {release}")
 
     files: list[tuple[Path, Path, str]] = []
+    datasets_by_domain: dict[str, set[str]] = {}
     empty: list[str] = []
     for dataset_id in sorted(selected):
         source_dir = manifest[dataset_id]
@@ -68,6 +73,8 @@ def main() -> int:
             empty.append(dataset_id)
             continue
         relative_dir = source_dir.relative_to(DATASET_ROOT / "raw")
+        domain = relative_dir.parts[0]
+        datasets_by_domain.setdefault(domain, set()).add(dataset_id)
         for source in present:
             target = release / "data" / relative_dir / source.relative_to(source_dir)
             files.append((source, target, dataset_id))
@@ -96,16 +103,42 @@ def main() -> int:
             for dataset_id in sorted(selected):
                 writer.writerow({name: selected[dataset_id][name] for name in fields})
 
+        for domain, dataset_ids in sorted(datasets_by_domain.items()):
+            metadata_dir = release / "data" / domain / "_METADATA"
+            metadata_dir.mkdir(parents=True, exist_ok=True)
+            with (metadata_dir / "ATTRIBUTION.tsv").open(
+                "w", encoding="utf-8", newline=""
+            ) as stream:
+                writer = csv.DictWriter(
+                    stream, fieldnames=fields, delimiter="\t", lineterminator="\n"
+                )
+                writer.writeheader()
+                for dataset_id in sorted(dataset_ids):
+                    writer.writerow(
+                        {name: selected[dataset_id][name] for name in fields}
+                    )
+            (metadata_dir / "README.md").write_text(
+                f"# Archive data.gouv.fr — {domain}\n\n"
+                "Ce torrent est un artefact candidat. Les sources, producteurs, licences "
+                "et dates de mise à jour figurent dans `ATTRIBUTION.tsv`. La présence dans "
+                "cette arborescence ne vaut pas approbation de publication.\n",
+                encoding="utf-8",
+            )
+
         summary = {
             "schema_version": 1,
             "release_id": args.release_id,
             "created_at": datetime.now().astimezone().isoformat(timespec="seconds"),
-            "selection_policy": "eligible license and no automatic personal-data signal",
+            "selection_policy": (
+                "eligible license, identified producer, and no automatic "
+                "personal-data signal"
+            ),
             "datasets_selected": len(selected),
             "datasets_without_local_files": empty,
             "files": len(files),
             "logical_bytes": logical_bytes,
             "decisions": dict(sorted(Counter(row["decision"] for row in selected.values()).items())),
+            "embedded_attribution_by_domain": True,
             "legal_review_complete": False,
             "publication_approved": False,
         }

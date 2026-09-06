@@ -332,9 +332,16 @@ les données, puis générer un torrent sans tracker par domaine :
 ./tools/torrents/create-torrents.sh datagouv-2026-09-06
 ```
 
-La release exclut les licences à revoir, les accès non ouverts et tout dataset
-signalé par l'heuristique de données personnelles. Les torrents restent marqués
-comme non approuvés et ne doivent pas être publiés avant revue humaine.
+La release exclut les licences à revoir, les accès non ouverts, les fiches sans
+producteur attribuable et tout dataset signalé par l'heuristique de données
+personnelles. Chaque domaine contient un
+répertoire `_METADATA/` avec son attribution filtrée et une notice ; ces preuves
+font donc partie du contenu signé par le torrent. Les torrents restent marqués
+comme non approuvés et ne doivent pas être publiés avant revue humaine. Une
+ancienne release dépourvue de `_METADATA/` doit être recréée sous un nouvel
+identifiant, jamais modifiée sur place. La création est reprenable : un torrent
+existant et lisible par `transmission-show` est conservé, tandis qu'un fichier
+`.torrent.part` incomplet est recalculé.
 
 ## 10. Figer une campagne auditable
 
