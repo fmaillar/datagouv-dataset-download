@@ -242,7 +242,38 @@ Enfin, cataloguer ce qui doit rester distant :
 
 Les fichiers `remote-resources-catalog.tsv` et `.jsonl` enregistrent le dataset, la ressource, le titre, l’URL, le format, le MIME, le chemin prévu et le résultat de la sonde. Ils rendent les exclusions explicites plutôt que silencieuses.
 
-## 8. Figer une campagne auditable
+## 8. Détecter les doublons binaires
+
+Construire l’inventaire SHA-256 et les groupes de fichiers strictement identiques :
+
+```bash
+./find-duplicates.sh --workers 1
+```
+
+Un seul worker est recommandé sur un disque rotatif. Lors du premier passage, l’outil réutilise les empreintes du rapport cryptographique et des réparations, puis ne lit que les fichiers encore inconnus. Les passages suivants valident le triplet chemin, taille et date de modification du cache ; un fichier nouveau ou modifié est automatiquement recalculé.
+
+Sorties :
+
+```text
+/mnt/data/datasets/checksums/file-hash-cache.tsv
+/mnt/data/datasets/catalogs/exact-duplicate-groups.tsv
+/mnt/data/datasets/catalogs/exact-duplicate-files.tsv
+/mnt/data/datasets/catalogs/duplicate-summary.json
+```
+
+`exact-duplicate-groups.tsv` fournit le SHA-256, le nombre de fichiers et d’inodes, la portée `within-dataset` ou `cross-dataset`, le chemin canonique proposé et l’espace physiquement récupérable. `exact-duplicate-files.tsv` détaille chaque membre. Deux chemins pointant déjà vers le même inode ne sont pas comptés deux fois dans le gain potentiel.
+
+Forcer exceptionnellement une relecture complète :
+
+```bash
+./find-duplicates.sh --rehash --workers 1
+```
+
+Cette commande relit toute l’archive et peut durer plusieurs heures. Elle n’est normalement pas nécessaire. Le scanner ne modifie jamais `raw/` ; `mutation_performed` reste à `false` dans le résumé. Ne pas supprimer automatiquement les variantes CSV, JSON, Parquet, GPKG ou SQL : elles peuvent représenter les mêmes objets sans être des doublons binaires.
+
+La campagne de référence a trouvé 323 groupes, 975 entrées et 67 groupes traversant plusieurs datasets. Le gain maximal estimé était de 7,36 Gio sur 772 Go, insuffisant pour justifier immédiatement une déduplication physique.
+
+## 9. Figer une campagne auditable
 
 Après la dernière vérification rapide, créer un snapshot en donnant un identifiant qui ne sera jamais réutilisé :
 
@@ -269,7 +300,7 @@ sha256sum -c SHA256SUMS
 
 Un dépôt Git marqué `dirty` n’invalide pas le snapshot : cet état est déclaré dans `run-metadata.json` et la copie exacte du working tree est conservée sous `repository/`. Pour une publication formelle, préférer néanmoins un commit propre avant la capture finale.
 
-## 9. Résultats de la campagne de référence
+## 10. Résultats de la campagne de référence
 
 La première vérification complète du 6 septembre 2026 a produit :
 
@@ -297,7 +328,7 @@ Au total, environ **428 ressources** ont été réparées. L’archive atteignai
 
 Ces nombres sont un instantané, pas une propriété permanente du catalogue : les producteurs peuvent ajouter, remplacer ou retirer des ressources.
 
-## 10. Limites et règles d’interprétation
+## 11. Limites et règles d’interprétation
 
 - Les métadonnées `filesize` et `checksum` peuvent être absentes ou périmées.
 - Une URL externe peut changer de contenu sans changement d’ID.
@@ -308,7 +339,7 @@ Ces nombres sont un instantané, pas une propriété permanente du catalogue : l
 - Le SHA-256 local assure la stabilité future de l’archive, mais ne prouve l’identité avec la source que lorsqu’une empreinte distante fiable existe.
 - `raw/` doit rester immuable ; toute normalisation appartient à un futur répertoire `processed/`.
 
-## 11. Checklist d’une nouvelle campagne
+## 12. Checklist d’une nouvelle campagne
 
 ```text
 [ ] Archiver les anciens rapports avec un horodatage
@@ -323,6 +354,7 @@ Ces nombres sont un instantané, pas une propriété permanente du catalogue : l
 [ ] Lancer verify-downloads.sh et conserver le rapport complet
 [ ] Auditer puis réparer uniquement les absences bornées
 [ ] Sonder et cataloguer les services/URL non archivés
+[ ] Exécuter find-duplicates.sh et examiner les groupes inter-datasets
 [ ] Créer le snapshot de campagne et valider SHA256SUMS
 [ ] Mettre en quarantaine plutôt que supprimer
 [ ] Consigner date, version du CLI, volumes et résultats finaux
