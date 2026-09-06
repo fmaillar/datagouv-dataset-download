@@ -16,7 +16,8 @@ from datetime import datetime
 from pathlib import Path
 
 
-SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_DIR = Path(__file__).resolve().parents[2]
+DOWNLOAD_DIR = REPO_DIR / "downloads"
 DATAGOUV = Path("/home/fgm/.local/bin/datagouv")
 LOG_DIR = Path("/mnt/data/datasets/logs")
 ENTRY_RE = re.compile(r'^download\s+(\S+)\s+"([^"]+)"')
@@ -36,10 +37,7 @@ def clean(value: object) -> str:
 
 def entries_from_scripts() -> list[Entry]:
     entries: list[Entry] = []
-    excluded = {"download-all.sh", "download-all-parallel.sh"}
-    for script in sorted(SCRIPT_DIR.glob("download-*.sh")):
-        if script.name in excluded:
-            continue
+    for script in sorted(DOWNLOAD_DIR.rglob("download-*.sh")):
         text = script.read_text(encoding="utf-8").replace("\\\n", "")
         root: Path | None = None
         for line in text.splitlines():

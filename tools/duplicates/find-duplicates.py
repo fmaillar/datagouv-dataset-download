@@ -16,7 +16,8 @@ from datetime import datetime
 from pathlib import Path
 
 
-REPO = Path(__file__).resolve().parent
+REPO = Path(__file__).resolve().parents[2]
+DOWNLOAD_DIR = REPO / "downloads"
 RAW_ROOT = Path("/mnt/data/datasets/raw")
 CHECKSUM_DIR = Path("/mnt/data/datasets/checksums")
 CATALOG_DIR = Path("/mnt/data/datasets/catalogs")
@@ -32,10 +33,7 @@ CHUNK_SIZE = 8 * 1024 * 1024
 
 def parse_destinations() -> list[tuple[Path, str, str]]:
     destinations: list[tuple[Path, str, str]] = []
-    excluded = {"download-all.sh", "download-all-parallel.sh"}
-    for script in sorted(REPO.glob("download-*.sh")):
-        if script.name in excluded:
-            continue
+    for script in sorted(DOWNLOAD_DIR.rglob("download-*.sh")):
         root: Path | None = None
         text = script.read_text(encoding="utf-8").replace("\\\n", "")
         for line in text.splitlines():

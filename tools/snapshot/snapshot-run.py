@@ -19,7 +19,8 @@ from datetime import datetime
 from pathlib import Path
 
 
-REPO = Path(__file__).resolve().parent
+REPO = Path(__file__).resolve().parents[2]
+DOWNLOAD_DIR = REPO / "downloads"
 DATASET_ROOT = Path("/mnt/data/datasets")
 LOG_ROOT = DATASET_ROOT / "logs"
 RUN_ROOT = DATASET_ROOT / "catalogs" / "runs"
@@ -43,10 +44,7 @@ def command(*args: str, cwd: Path | None = None) -> str:
 
 def parse_entries() -> list[dict[str, str]]:
     entries: list[dict[str, str]] = []
-    excluded = {"download-all.sh", "download-all-parallel.sh"}
-    for script in sorted(REPO.glob("download-*.sh")):
-        if script.name in excluded:
-            continue
+    for script in sorted(DOWNLOAD_DIR.rglob("download-*.sh")):
         root = ""
         text = script.read_text(encoding="utf-8").replace("\\\n", "")
         for line in text.splitlines():
@@ -82,13 +80,16 @@ def directory_summary(root: Path) -> list[dict[str, int | str]]:
 
 
 def copy_repository(destination: Path) -> None:
-    destination.mkdir(parents=True)
-    for source in sorted(REPO.iterdir()):
-        if not source.is_file():
-            continue
-        if source.name.endswith((".pyc", ".log")):
-            continue
-        shutil.copy2(source, destination / source.name)
+    shutil.copytree(
+        REPO,
+        destination,
+        ignore=shutil.ignore_patterns(
+            ".git",
+            "__pycache__",
+            "*.pyc",
+            "*.log",
+        ),
+    )
 
 
 def sha256_file(path: Path) -> str:

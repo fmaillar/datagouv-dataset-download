@@ -3,6 +3,8 @@
 set -u
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+DOWNLOAD_DIR="$REPO_DIR/downloads"
 WORKERS="${1:-4}"
 LOG_DIR="/mnt/data/datasets/logs/parallel"
 MASTER_LOG="/mnt/data/datasets/logs/download-all-parallel.log"
@@ -15,10 +17,8 @@ fi
 mkdir -p "$LOG_DIR"
 
 mapfile -t scripts < <(
-    find "$SCRIPT_DIR" -maxdepth 1 -type f -name 'download-*.sh' \
-      ! -name 'download-all.sh' \
-      ! -name 'download-all-parallel.sh' \
-      -printf '%f\n' | sort
+    find "$DOWNLOAD_DIR" -type f -name 'download-*.sh' \
+      -printf '%P\n' | sort
 )
 
 if ((${#scripts[@]} == 0)); then
@@ -54,10 +54,14 @@ echo "Scripts prévus : ${#scripts[@]}" | tee -a "$MASTER_LOG"
 
 launch_script() {
     local script="$1"
-    local console_log="$LOG_DIR/${script%.sh}.log"
+    local script_name
+    local console_log
+
+    script_name="$(basename "$script")"
+    console_log="$LOG_DIR/${script_name%.sh}.log"
 
     echo "DÉBUT : $script — $(date --iso-8601=seconds)" | tee -a "$MASTER_LOG"
-    bash "$SCRIPT_DIR/$script" >"$console_log" 2>&1 &
+    bash "$DOWNLOAD_DIR/$script" >"$console_log" 2>&1 &
     pid_to_script[$!]="$script"
     running=$((running + 1))
 }

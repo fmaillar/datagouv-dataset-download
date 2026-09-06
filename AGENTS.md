@@ -17,7 +17,7 @@ bash -n download-*.sh
 Run a batch explicitly when the host has the `datagouv` CLI and `/mnt/data` storage configured:
 
 ```bash
-bash download-socio-economie-lot2.sh
+bash downloads/socio-economie/download-socio-economie-lot2.sh
 tail -f /mnt/data/datasets/logs/socio-economie-lot2-download.log
 ```
 

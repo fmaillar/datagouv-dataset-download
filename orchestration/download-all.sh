@@ -3,6 +3,8 @@
 set -u
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+DOWNLOAD_DIR="$REPO_DIR/downloads"
 LOG="/mnt/data/datasets/logs/download-all.log"
 
 mkdir -p "$(dirname "$LOG")"
@@ -87,7 +89,17 @@ echo "Début global : $(date --iso-8601=seconds)" >"$LOG"
 echo "Scripts prévus : ${#scripts[@]}" | tee -a "$LOG"
 
 for script in "${scripts[@]}"; do
-    script_path="$SCRIPT_DIR/$script"
+    mapfile -t matches < <(
+        find "$DOWNLOAD_DIR" -type f -name "$script" -print
+    )
+
+    if ((${#matches[@]} != 1)); then
+        echo "ERREUR : $script correspond à ${#matches[@]} fichier(s)"           | tee -a "$LOG" >&2
+        failed+=("$script")
+        continue
+    fi
+
+    script_path="${matches[0]}"
 
     echo | tee -a "$LOG"
     echo "================================================================" | tee -a "$LOG"

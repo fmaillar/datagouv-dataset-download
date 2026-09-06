@@ -27,12 +27,12 @@ Le CLI propose notamment `search`, `dataset`, `resources`, `metadata`, `stats`, 
 
 ```text
 download-<domaine>-lotN.sh       manifestes de datasets
-download-all.sh                  exécution séquentielle
-download-all-parallel.sh         exécution parallèle
-verify-downloads.{sh,py}         contrôle d’intégrité
-repair-downloads.{sh,py}         audit et réparation ciblée
-build-remote-catalog.{sh,py}     catalogue des services non archivables
-fouille-datagouv.sh              exemple de campagne de recherche
+orchestration/download-all.sh    exécution séquentielle
+orchestration/download-all-parallel.sh  exécution parallèle
+tools/verify/verify-downloads.{sh,py}  contrôle d’intégrité
+tools/repair/repair-downloads.{sh,py}  audit et réparation ciblée
+tools/catalog/build-remote-catalog.{sh,py}  catalogue des services non archivables
+tools/fouille-datagouv.sh         exemple de campagne de recherche
 CODEX_CONTEXT_DATAGOUV_M710S.md  décisions et IDs structurants initiaux
 ```
 
@@ -59,7 +59,7 @@ Utiliser exclusivement le CLI local. Une fouille commence par des requêtes simp
 `fouille-datagouv.sh` illustre une fouille géospatiale et redirige les résultats dans un journal. C’est un fragment Bash sans shebang ; l’exécuter ainsi :
 
 ```bash
-bash fouille-datagouv.sh
+bash tools/fouille-datagouv.sh
 ```
 
 Conserver le journal brut de chaque campagne avec sa date, les requêtes exactes et la limite utilisée. Cela permet de distinguer la sélection humaine du résultat renvoyé par le moteur de recherche à un instant donné.
@@ -108,12 +108,12 @@ download <dataset_id> "destination/relative"
 Valider le dépôt sans télécharger :
 
 ```bash
-bash -n download-*.sh verify-downloads.sh repair-downloads.sh \
-  build-remote-catalog.sh
-shellcheck download-*.sh verify-downloads.sh repair-downloads.sh \
-  build-remote-catalog.sh
-python3 -m py_compile verify-downloads.py repair-downloads.py \
-  build-remote-catalog.py
+find downloads orchestration tools -type f -name '*.sh' -print0 | \
+  xargs -0 -n1 bash -n
+find downloads orchestration tools -type f -name '*.sh' -print0 | \
+  xargs -0 shellcheck
+find tools -type f -name '*.py' -print0 | \
+  xargs -0 -n1 python3 -m py_compile
 ```
 
 ## 4. Téléchargement initial et reprise
@@ -121,7 +121,7 @@ python3 -m py_compile verify-downloads.py repair-downloads.py \
 Le mode recommandé lance plusieurs scripts, pas plusieurs ressources d’un même dataset :
 
 ```bash
-./download-all-parallel.sh 6
+./orchestration/download-all-parallel.sh 6
 tail -f /mnt/data/datasets/logs/download-all-parallel.log
 ```
 
@@ -146,7 +146,7 @@ rg '^ECHEC:' /mnt/data/datasets/logs/*-download.log
 Attendre la fin de tous les téléchargements. Commencer par l’inventaire rapide :
 
 ```bash
-./verify-downloads.sh --quick
+./tools/verify/verify-downloads.sh --quick
 ```
 
 Il reconstruit les couples ID/destination depuis les scripts, interroge `datagouv resources --json`, puis compare existence et taille. Il produit :
@@ -159,7 +159,7 @@ Il reconstruit les couples ID/destination depuis les scripts, interroge `datagou
 Lancer ensuite la passe complète :
 
 ```bash
-time ./verify-downloads.sh
+time ./tools/verify/verify-downloads.sh
 ```
 
 Elle compare les checksums distants disponibles et calcule un SHA-256 local. Sur environ 772 Go, la première passe complète a duré 126 minutes. Les statuts sont :
@@ -189,13 +189,13 @@ Ne jamais supprimer l’archive entière après un rapport négatif. Le réparat
 Audit sans écriture :
 
 ```bash
-./repair-downloads.sh
+./tools/repair/repair-downloads.sh
 ```
 
 Réparation des seules ressources absentes dont data.gouv publie une taille :
 
 ```bash
-./repair-downloads.sh --execute
+./tools/repair/repair-downloads.sh --execute
 ```
 
 Garanties de ce mode :
@@ -214,7 +214,7 @@ Les différences de taille et checksum sont d’abord sondées par requête HTTP
 Classifier les absences sans taille sans télécharger leur contenu :
 
 ```bash
-./repair-downloads.sh --probe-unknown --api-workers 16
+./tools/repair/repair-downloads.sh --probe-unknown --api-workers 16
 ```
 
 La sonde utilise les en-têtes HTTP et les formats déclarés pour séparer :
@@ -229,7 +229,7 @@ La sonde utilise les en-têtes HTTP et les formats déclarés pour séparer :
 Télécharger uniquement la liste blanche `PROBE_FICHIER_BORNE` :
 
 ```bash
-./repair-downloads.sh --execute --execute-probed --download-workers 6
+./tools/repair/repair-downloads.sh --execute --execute-probed --download-workers 6
 ```
 
 Ne pas employer `--include-unknown-size` sans revue manuelle : une URL peut être une API ou un flux sans borne.
@@ -237,7 +237,7 @@ Ne pas employer `--include-unknown-size` sans revue manuelle : une URL peut êtr
 Enfin, cataloguer ce qui doit rester distant :
 
 ```bash
-./build-remote-catalog.sh
+./tools/catalog/build-remote-catalog.sh
 ```
 
 Les fichiers `remote-resources-catalog.tsv` et `.jsonl` enregistrent le dataset, la ressource, le titre, l’URL, le format, le MIME, le chemin prévu et le résultat de la sonde. Ils rendent les exclusions explicites plutôt que silencieuses.
@@ -247,7 +247,7 @@ Les fichiers `remote-resources-catalog.tsv` et `.jsonl` enregistrent le dataset,
 Construire l’inventaire SHA-256 et les groupes de fichiers strictement identiques :
 
 ```bash
-./find-duplicates.sh --workers 1
+./tools/duplicates/find-duplicates.sh --workers 1
 ```
 
 Un seul worker est recommandé sur un disque rotatif. Lors du premier passage, l’outil réutilise les empreintes du rapport cryptographique et des réparations, puis ne lit que les fichiers encore inconnus. Les passages suivants valident le triplet chemin, taille et date de modification du cache ; un fichier nouveau ou modifié est automatiquement recalculé.
@@ -266,7 +266,7 @@ Sorties :
 Forcer exceptionnellement une relecture complète :
 
 ```bash
-./find-duplicates.sh --rehash --workers 1
+./tools/duplicates/find-duplicates.sh --rehash --workers 1
 ```
 
 Cette commande relit toute l’archive et peut durer plusieurs heures. Elle n’est normalement pas nécessaire. Le scanner ne modifie jamais `raw/` ; `mutation_performed` reste à `false` dans le résumé. Ne pas supprimer automatiquement les variantes CSV, JSON, Parquet, GPKG ou SQL : elles peuvent représenter les mêmes objets sans être des doublons binaires.
@@ -278,7 +278,7 @@ La campagne de référence a trouvé 323 groupes, 975 entrées et 67 groupes tra
 Après la dernière vérification rapide, créer un snapshot en donnant un identifiant qui ne sera jamais réutilisé :
 
 ```bash
-./snapshot-run.sh 2026-09-05_2026-09-06
+./tools/snapshot/snapshot-run.sh 2026-09-05_2026-09-06
 ```
 
 Le script refuse d’écraser un dossier existant et crée sous `/mnt/data/datasets/catalogs/runs/<run_id>/` :
@@ -348,13 +348,13 @@ Ces nombres sont un instantané, pas une propriété permanente du catalogue : l
 [ ] Ajouter ID et destination dans un lot thématique
 [ ] Contrôler les doublons d’ID
 [ ] Exécuter bash -n, ShellCheck et py_compile
-[ ] Lancer download-all-parallel.sh avec une concurrence mesurée
+[ ] Lancer orchestration/download-all-parallel.sh avec une concurrence mesurée
 [ ] Rechercher les ECHEC internes, même si les scripts sont OK
-[ ] Lancer verify-downloads.sh --quick
-[ ] Lancer verify-downloads.sh et conserver le rapport complet
+[ ] Lancer tools/verify/verify-downloads.sh --quick
+[ ] Lancer tools/verify/verify-downloads.sh et conserver le rapport complet
 [ ] Auditer puis réparer uniquement les absences bornées
 [ ] Sonder et cataloguer les services/URL non archivés
-[ ] Exécuter find-duplicates.sh et examiner les groupes inter-datasets
+[ ] Exécuter tools/duplicates/find-duplicates.sh et examiner les groupes inter-datasets
 [ ] Créer le snapshot de campagne et valider SHA256SUMS
 [ ] Mettre en quarantaine plutôt que supprimer
 [ ] Consigner date, version du CLI, volumes et résultats finaux
