@@ -21,8 +21,10 @@ fi
 source_bytes="$(du -s --block-size=1 "$SOURCE" | awk '{print $1}')"
 available_bytes="$(df -P --block-size=1 /mnt/data/torrents | awk 'NR==2 {print $4}')"
 required_bytes=$((source_bytes + source_bytes / 10))
-printf 'Source : %s\nDestination : %s\nVolume apparent : %.2f Gio\n' \
-    "$SOURCE" "$TARGET" "$(awk -v value="$source_bytes" 'BEGIN {print value / 1024 / 1024 / 1024}')"
+source_gib="$(LC_ALL=C awk -v value="$source_bytes" \
+    'BEGIN {printf "%.2f", value / 1024 / 1024 / 1024}')"
+printf 'Source : %s\nDestination : %s\nVolume apparent : %s Gio\n' \
+    "$SOURCE" "$TARGET" "$source_gib"
 if ((available_bytes < required_bytes)); then
     echo "Espace insuffisant avec réserve de 10 %" >&2
     exit 1
