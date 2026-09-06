@@ -324,6 +324,19 @@ inconnue et accès non ouvert. Le signal de données personnelles est une
 heuristique imposant une revue humaine ; il ne constitue pas une conclusion
 juridique. Aucun torrent ne doit être publié uniquement sur la foi de cet audit.
 
+Générer ensuite le registre de revue formelle :
+
+```bash
+./tools/licenses/review-publication.sh
+```
+
+Le rapport `catalogs/publication-review.tsv` classe chaque dataset sans prendre
+de décision juridique à la place du réviseur. Les décisions humaines sont
+versionnées dans `reviews/publication-decisions.tsv` avec les valeurs `APPROVE`,
+`EXCLUDE` ou `HOLD`. Chaque ligne doit préciser le réviseur, un horodatage ISO et
+un motif. Relancer l'outil après chaque modification ; une licence ou un accès
+automatiquement bloqué ne peut pas être forcé par une décision manuelle.
+
 Préparer ensuite une release conservatrice par liens physiques, sans recopier
 les données, puis générer un torrent sans tracker par domaine :
 
@@ -360,6 +373,7 @@ Le script refuse d’écraser un dossier existant et crée sous `/mnt/data/datas
 - `evidence/logs/` : journaux et rapports de la campagne ;
 - `evidence/duplicates/` : résumé et inventaires détaillés des doublons exacts ;
 - `evidence/licenses/` : audit des licences et signaux de revue humaine ;
+- `evidence/publication/` : registre de revue et décisions humaines versionnées ;
 - `SHA256SUMS` : empreintes de toutes les preuves du snapshot ;
 - `SNAPSHOT_COMPLETE` : marqueur écrit uniquement à la fin.
 

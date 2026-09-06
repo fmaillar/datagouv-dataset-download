@@ -36,6 +36,11 @@ LICENSE_ARTIFACTS = (
     "license-audit-summary.json",
     "license-audit.tsv",
 )
+PUBLICATION_REVIEW_ARTIFACTS = (
+    "publication-review.jsonl",
+    "publication-review-summary.json",
+    "publication-review.tsv",
+)
 ENTRY_RE = re.compile(r'^download\s+(\S+)\s+"([^"]+)"')
 ROOT_RE = re.compile(r'^ROOT="([^"]+)"')
 
@@ -130,6 +135,12 @@ def main() -> int:
     missing_licenses = [name for name in LICENSE_ARTIFACTS if not (CATALOG_ROOT / name).is_file()]
     if missing_licenses:
         parser.error("catalogues de licences absents : " + ", ".join(missing_licenses))
+    missing_reviews = [
+        name for name in PUBLICATION_REVIEW_ARTIFACTS
+        if not (CATALOG_ROOT / name).is_file()
+    ]
+    if missing_reviews:
+        parser.error("revue de publication absente : " + ", ".join(missing_reviews))
 
     run_dir = RUN_ROOT / args.run_id
     if run_dir.exists():
@@ -147,6 +158,14 @@ def main() -> int:
         license_dir.mkdir(parents=True)
         for name in LICENSE_ARTIFACTS:
             shutil.copy2(CATALOG_ROOT / name, license_dir / name)
+        publication_dir = evidence_dir / "publication"
+        publication_dir.mkdir(parents=True)
+        for name in PUBLICATION_REVIEW_ARTIFACTS:
+            shutil.copy2(CATALOG_ROOT / name, publication_dir / name)
+        shutil.copy2(
+            REPO / "reviews" / "publication-decisions.tsv",
+            publication_dir / "publication-decisions.tsv",
+        )
         copy_repository(repository_dir)
 
         entries = parse_entries()
@@ -232,6 +251,7 @@ def main() -> int:
                 "Repository working-tree files are copied under repository/.",
                 "Exact duplicate inventories are copied under evidence/duplicates/.",
                 "License audit artifacts are copied under evidence/licenses/.",
+                "Publication review artifacts and decisions are copied under evidence/publication/.",
             ],
         }
         (run_dir / "run-metadata.json").write_text(
