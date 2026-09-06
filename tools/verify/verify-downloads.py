@@ -109,8 +109,9 @@ def main() -> int:
         parser.error("api-workers doit valoir 1..32 et hash-workers 1..4")
 
     LOG_DIR.mkdir(parents=True, exist_ok=True)
-    report = LOG_DIR / "verification-downloads.tsv"
-    manifest = LOG_DIR / "checksums-manifest.tsv"
+    suffix = "-targeted" if args.dataset else ""
+    report = LOG_DIR / f"verification-downloads{suffix}.tsv"
+    manifest = LOG_DIR / f"checksums-manifest{suffix}.tsv"
     entries = entries_from_scripts()
     if args.dataset:
         selected = set(args.dataset)

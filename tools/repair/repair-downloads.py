@@ -20,7 +20,7 @@ from pathlib import Path
 
 DATAGOUV = Path("/home/fgm/.local/bin/datagouv")
 LOG_DIR = Path("/mnt/data/datasets/logs")
-REPORT = LOG_DIR / "verification-downloads.tsv"
+DEFAULT_REPORT = LOG_DIR / "verification-downloads.tsv"
 USER_AGENT = "datagouv-archive-repair/1.0"
 CHUNK_SIZE = 8 * 1024 * 1024
 
@@ -176,6 +176,7 @@ def audit_existing(job: tuple[str, str, Path, dict, str]) -> list[object]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--execute", action="store_true", help="télécharger réellement les ressources ABSENT")
     parser.add_argument(
         "--include-unknown-size",
@@ -201,14 +202,15 @@ def main() -> int:
         parser.error("--probe-unknown est un audit et ne se combine pas avec --execute")
     if args.execute_probed and not args.execute:
         parser.error("--execute-probed exige --execute")
-    if not REPORT.is_file():
-        parser.error(f"rapport absent : {REPORT}")
+    if not args.report.is_file():
+        parser.error(f"rapport absent : {args.report}")
 
-    with REPORT.open(encoding="utf-8", newline="") as stream:
+    with args.report.open(encoding="utf-8", newline="") as stream:
         rows = list(csv.DictReader(stream, delimiter="\t"))
     probed_allowed: set[tuple[str, str]] = set()
     if args.execute_probed:
-        probe_report = LOG_DIR / "repair-downloads-probe-unknown.tsv"
+        suffix = "-targeted" if "targeted" in args.report.stem else ""
+        probe_report = LOG_DIR / f"repair-downloads-probe-unknown{suffix}.tsv"
         if not probe_report.is_file():
             parser.error(f"rapport de sonde absent : {probe_report}")
         with probe_report.open(encoding="utf-8", newline="") as stream:
@@ -293,12 +295,13 @@ def main() -> int:
                 if index % 25 == 0 or index == len(jobs):
                     print(f"Réparation : {index}/{len(jobs)}", flush=True)
 
+    suffix = "-targeted" if "targeted" in args.report.stem else ""
     if args.execute:
-        output = LOG_DIR / "repair-downloads-execution.tsv"
+        output = LOG_DIR / f"repair-downloads-execution{suffix}.tsv"
     elif args.probe_unknown:
-        output = LOG_DIR / "repair-downloads-probe-unknown.tsv"
+        output = LOG_DIR / f"repair-downloads-probe-unknown{suffix}.tsv"
     else:
-        output = LOG_DIR / "repair-downloads-audit.tsv"
+        output = LOG_DIR / f"repair-downloads-audit{suffix}.tsv"
     with output.open("w", encoding="utf-8", newline="") as stream:
         writer = csv.writer(stream, delimiter="\t", lineterminator="\n")
         writer.writerow(["statut", "dataset_id", "resource_id", "chemin", "detail", "taille", "sha256"])

@@ -31,6 +31,7 @@ orchestration/download-all.sh    exécution séquentielle
 orchestration/download-all-parallel.sh  exécution parallèle
 tools/verify/verify-downloads.{sh,py}  contrôle d’intégrité
 tools/repair/repair-downloads.{sh,py}  audit et réparation ciblée
+tools/migrate/migrate-destinations.{sh,py}  migration après renommage
 tools/catalog/build-remote-catalog.{sh,py}  catalogue des services non archivables
 tools/fouille-datagouv.sh         exemple de campagne de recherche
 README.md                        politique et procédure reproductible
@@ -94,6 +95,19 @@ rg --no-filename '^download ' downloads --glob 'download-*.sh' \
 
 Une sortie vide est attendue.
 
+Lorsqu’une destination est renommée après une campagne, réutiliser les fichiers
+attribués par le dernier rapport de vérification. La commande simule d’abord la
+migration ; `--execute` crée des liens physiques et ne remplace aucun fichier :
+
+```bash
+./tools/migrate/migrate-destinations.sh
+./tools/migrate/migrate-destinations.sh --execute
+```
+
+Conserver les anciens répertoires jusqu’à ce que la vérification des nouvelles
+destinations soit terminée. Les déplacer ensuite dans `quarantine/` plutôt que
+les supprimer.
+
 ## 3. Convention des manifestes
 
 Chaque script définit une racine thématique et un journal. Il utilise `set -u`, mais pas `set -e`, afin qu’un dataset en échec n’empêche pas les suivants d’être tentés. Les répertoires sont créés explicitement et chaque appel est journalisé.
@@ -149,6 +163,16 @@ Attendre la fin de tous les téléchargements. Commencer par l’inventaire rapi
 ./tools/verify/verify-downloads.sh --quick
 ```
 
+Limiter un contrôle à un ou plusieurs datasets avec une option répétable. Les
+résultats ciblés sont écrits dans des fichiers suffixés `-targeted` afin de ne
+pas remplacer le dernier rapport global :
+
+```bash
+./tools/verify/verify-downloads.sh --quick \
+  --dataset 6707515c84dfa4012c3ecd45 \
+  --dataset 5889d042a3a72974c1f0d607
+```
+
 Il reconstruit les couples ID/destination depuis les scripts, interroge `datagouv resources --json`, puis compare existence et taille. Il produit :
 
 ```text
@@ -196,6 +220,15 @@ Réparation des seules ressources absentes dont data.gouv publie une taille :
 
 ```bash
 ./tools/repair/repair-downloads.sh --execute
+```
+
+Pour réparer seulement le résultat d’un contrôle ciblé sans toucher au rapport
+global :
+
+```bash
+./tools/repair/repair-downloads.sh \
+  --report /mnt/data/datasets/logs/verification-downloads-targeted.tsv \
+  --execute
 ```
 
 Garanties de ce mode :
