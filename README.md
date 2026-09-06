@@ -336,6 +336,10 @@ versionnées dans `reviews/publication-decisions.tsv` avec les valeurs `APPROVE`
 `EXCLUDE` ou `HOLD`. Chaque ligne doit préciser le réviseur, un horodatage ISO et
 un motif. Relancer l'outil après chaque modification ; une licence ou un accès
 automatiquement bloqué ne peut pas être forcé par une décision manuelle.
+Les analyses préparatoires peuvent être conservées sous
+`reviews/recommendations/batch-NNN.tsv`. Une recommandation technique ne devient
+une décision qu'après validation explicite et ajout dans
+`reviews/publication-decisions.tsv`.
 
 Préparer ensuite une release conservatrice par liens physiques, sans recopier
 les données, puis générer un torrent sans tracker par domaine :
