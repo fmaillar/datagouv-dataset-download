@@ -42,6 +42,11 @@ def destinations() -> dict[str, Path]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("release_id")
+    parser.add_argument(
+        "--dataset-list",
+        type=Path,
+        help="limite la release aux IDs non commentés de ce fichier",
+    )
     parser.add_argument("--execute", action="store_true")
     args = parser.parse_args()
     if not re.fullmatch(r"[A-Za-z0-9._+-]+", args.release_id):
@@ -72,6 +77,28 @@ def main() -> int:
             and row["dataset_id"] in approved_ids
         )
     }
+    requested_ids: set[str] | None = None
+    if args.dataset_list:
+        if not args.dataset_list.is_file():
+            parser.error(f"liste de datasets absente : {args.dataset_list}")
+        requested_ids = {
+            line.strip()
+            for line in args.dataset_list.read_text(encoding="utf-8").splitlines()
+            if line.strip() and not line.lstrip().startswith("#")
+        }
+        if not requested_ids:
+            parser.error("liste de datasets vide")
+        unavailable = sorted(requested_ids - set(selected))
+        if unavailable:
+            parser.error(
+                "datasets demandés non approuvés ou non admissibles : "
+                + ", ".join(unavailable)
+            )
+        selected = {
+            dataset_id: row
+            for dataset_id, row in selected.items()
+            if dataset_id in requested_ids
+        }
     manifest = destinations()
     release = DATASET_ROOT / "releases" / args.release_id
     if release.exists():
@@ -147,6 +174,7 @@ def main() -> int:
                 "final publication status APPROVED, eligible license, identified "
                 "producer, with heuristic signals resolved by manual review"
             ),
+            "dataset_list": str(args.dataset_list) if args.dataset_list else None,
             "datasets_selected": len(selected),
             "datasets_without_local_files": empty,
             "files": len(files),

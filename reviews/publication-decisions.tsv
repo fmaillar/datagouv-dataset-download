@@ -53,7 +53,7 @@ dataset_id	decision	reviewer	reviewed_at	rationale
 5369932fa3a729239d20410c	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : address,contact
 53699373a3a729239d2041c4	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
 53699373a3a729239d2041c5	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
-53699374a3a729239d2041cc	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : contact,email,phone
+53699374a3a729239d2041cc	APPROVE	Florian MAILLARD	2026-09-07T09:57:37+02:00	Effectifs étudiants agrégés par établissement et catégories; les contacts détectés proviennent de la documentation; Licence Ouverte et producteur ministériel identifiés.
 53699434a3a729239d2043b3	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : contact,phone
 53699504a3a729239d2045bb	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
 53699506a3a729239d2045bd	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
@@ -105,7 +105,7 @@ dataset_id	decision	reviewer	reviewed_at	rationale
 53fd262ea3a729390ba568a7	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : partial_file_sample
 54294e8f88ee380327a59161	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
 54510dc1c751df1fdb5a81f3	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
-547d8d7ac751df405d090fcb	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : partial_file_sample
+547d8d7ac751df405d090fcb	APPROVE	Florian MAILLARD	2026-09-07T09:57:37+02:00	Données cartographiques et statistiques de déploiement des réseaux publiées en open data par l'ARCEP; aucun individu décrit; Licence Ouverte.
 5489cda0c751df35a24120e7	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
 548acaf2c751df1eac4120e7	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : contact,phone
 548ad919c751df3d674120e7	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : contact,phone
@@ -368,7 +368,7 @@ dataset_id	decision	reviewer	reviewed_at	rationale
 61d5bd6fd8fa52f2c3c19243	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
 61d5e2d372a52d9f9411ff88	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
 61dc6f4a673f9b5ffe0c29c1	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : health_id
-61dc7157488f8cdb4283e3c3	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : address,contact
+61dc7157488f8cdb4283e3c3	APPROVE	Florian MAILLARD	2026-09-07T09:57:37+02:00	Référentiel ouvert à la maille bâtiment publié par le CSTB; les adresses et contacts détectés décrivent les bâtiments ou la documentation; Licence Ouverte 2.0.
 621df2954fa5a3b5a023e23c	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
 62225f6a523b5729143b138c	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : address
 62263311ca3d6516043e0c4d	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
@@ -466,8 +466,8 @@ dataset_id	decision	reviewer	reviewed_at	rationale
 66063d22592637d8f57263d5	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : address,contact,first_name,phone
 660bf8c3b504b24a6b00c533	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : contact,phone
 662156e6b5a7116d9e79100e	EXCLUDE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun fichier local complet à diffuser
-662a5e2cd71b24df5e9a0827	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : address,partial_file_sample
-6641c562e5acdb35c0e6051d	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : contact,partial_file_sample,phone
+662a5e2cd71b24df5e9a0827	APPROVE	Florian MAILLARD	2026-09-07T09:57:37+02:00	Arrêtés préfectoraux, restrictions et zonages publiés pour l'information du public; source ministérielle et Licence Ouverte 2.0.
+6641c562e5acdb35c0e6051d	APPROVE	Florian MAILLARD	2026-09-07T09:57:37+02:00	Cartographies raster et vectorielles de zones climatiques; les contacts détectés figurent dans les notices Cerema; aucun individu décrit; Licence Ouverte 2.0.
 664337d4629c4313dc94b104	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
 664723eb8ecd21c19bbfd060	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
 66512b67b8c9abb821e5a98b	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
@@ -573,7 +573,7 @@ dataset_id	decision	reviewer	reviewed_at	rationale
 67f8c966c92603a7a776f4f1	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : producteur absent; attribution à résoudre
 67fa2463bb6c4cc70a4455be	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
 67fde2999ab3bd79d09ac72f	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : contact,phone
-67fe0fe2423db9c4a05d8ced	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : partial_file_sample
+67fe0fe2423db9c4a05d8ced	APPROVE	Florian MAILLARD	2026-09-07T09:57:37+02:00	Indicateurs Insee de population et d'accès aux équipements agrégés au carreau de 200 mètres; attribution prescrite conservée; Licence Ouverte 2.0.
 6801979693473505d4622e18	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : contact
 680197a093473505d4622e1b	APPROVE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun signal direct dans les noms et échantillons inspectés
 680197aa93473505d4622e1e	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : address,contact,email,phone
@@ -608,7 +608,7 @@ dataset_id	decision	reviewer	reviewed_at	rationale
 684004232f9592aab088e170	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : address,contact,phone
 684004242f9592aab088e173	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : address,contact,phone
 684004282f9592aab088e17e	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : address,contact,phone
-68499185bdb47a49e2b67581	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : partial_file_sample
+68499185bdb47a49e2b67581	APPROVE	Florian MAILLARD	2026-09-07T09:57:37+02:00	Parcelles agricoles explicitement publiées comme anonymisées par l'Agence Bio; schéma sans exploitant physique ou moral; Licence Ouverte 2.0.
 684a50e9bd2710cecf52b638	EXCLUDE	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : aucun fichier local complet à diffuser
 684be69c7dd2fdcc07ae0149	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : contact
 684be6a57dd2fdcc07ae0157	HOLD	Florian MAILLARD	2026-09-06T22:53:34+02:00	Revue technique bornée : signal direct à examiner : contact
