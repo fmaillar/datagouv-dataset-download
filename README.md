@@ -1,8 +1,40 @@
-# Archive data.gouv.fr — manuel de reproductibilité
+# Archive data.gouv.fr — torrents et traçabilité
 
-Ce dépôt décrit une méthode reproductible pour rechercher, sélectionner, télécharger, vérifier et réparer une archive thématique de jeux de données publiés sur [data.gouv.fr](https://www.data.gouv.fr/). Il contient les manifestes de téléchargement et les outils d’audit, mais pas les données : celles-ci sont écrites sous `/mnt/data/datasets/`.
+Ce dépôt distribue par BitTorrent une archive thématique de jeux de données
+publiés sur [data.gouv.fr](https://www.data.gouv.fr/). Il documente également la
+recherche, la sélection, le téléchargement, la vérification et la réparation du
+corpus afin que son contenu reste auditable. Les données ne sont pas stockées
+dans Git.
 
 Le corpus actuel comprend **895 identifiants uniques**, répartis dans **70 scripts** et 16 domaines : administration, agriculture-alimentation, climat-environnement, culture-patrimoine, éducation, emploi-formation, énergie, entreprises-économie, finances publiques, justice-sécurité, santé, socio-économie, technologie-numérique, territoire-géospatial, tourisme et transport.
+
+## Télécharger l’archive
+
+La diffusion publique approuvée contient **343 datasets**, **1 255 fichiers** et
+représente **91,89 Gio**. Les fichiers `.torrent`, empreintes SHA-256,
+attributions et index sont disponibles dans la [release GitHub
+datagouv-2026-09-06-reviewed-final-v1](https://github.com/fmaillar/datagouv-dataset-download/releases/tag/datagouv-2026-09-06-reviewed-final-v1).
+
+| Domaine | Lien magnet |
+|---|---|
+| Administration | [Télécharger](magnet:?xt=urn:btih:534b576de249e979157424dbfbeaf6fd2d5782a4&dn=administration&tr=udp%3A%2F%2Ftracker.opentrackr.com%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.gmi.gd%3A6969%2Fannounce&tr=https%3A%2F%2Ftracker.onetracker.net%3A443%2Fannounce) |
+| Agriculture et alimentation | [Télécharger](magnet:?xt=urn:btih:0b09756eae64b11ab1da2783aedcd4186c7dd336&dn=agriculture-alimentation&tr=udp%3A%2F%2Ftracker.opentrackr.com%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.gmi.gd%3A6969%2Fannounce&tr=https%3A%2F%2Ftracker.onetracker.net%3A443%2Fannounce) |
+| Climat et environnement | [Télécharger](magnet:?xt=urn:btih:9527a4288d0ee92ed25d5c216cc6eb01692e3d8b&dn=climat-environnement&tr=udp%3A%2F%2Ftracker.opentrackr.com%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.gmi.gd%3A6969%2Fannounce&tr=https%3A%2F%2Ftracker.onetracker.net%3A443%2Fannounce) |
+| Culture et patrimoine | [Télécharger](magnet:?xt=urn:btih:c467c29e1f54a097ce72e234bb9bd5a9cbf8b117&dn=culture-patrimoine&tr=udp%3A%2F%2Ftracker.opentrackr.com%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.gmi.gd%3A6969%2Fannounce&tr=https%3A%2F%2Ftracker.onetracker.net%3A443%2Fannounce) |
+| Éducation | [Télécharger](magnet:?xt=urn:btih:2e858dd1c02b853576ec4917c0037ad6861c8f54&dn=education&tr=udp%3A%2F%2Ftracker.opentrackr.com%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.gmi.gd%3A6969%2Fannounce&tr=https%3A%2F%2Ftracker.onetracker.net%3A443%2Fannounce) |
+| Énergie | [Télécharger](magnet:?xt=urn:btih:e24f1c00579d090f6d3e5ff2bab7af15c66a3a49&dn=energie&tr=udp%3A%2F%2Ftracker.opentrackr.com%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.gmi.gd%3A6969%2Fannounce&tr=https%3A%2F%2Ftracker.onetracker.net%3A443%2Fannounce) |
+| Finances publiques | [Télécharger](magnet:?xt=urn:btih:6be9f0e5846373a9393f9f4582c9e209baf97013&dn=finances-publiques&tr=udp%3A%2F%2Ftracker.opentrackr.com%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.gmi.gd%3A6969%2Fannounce&tr=https%3A%2F%2Ftracker.onetracker.net%3A443%2Fannounce) |
+| Justice et sécurité | [Télécharger](magnet:?xt=urn:btih:e1b9d4f5f32ac16373c0deca3979c2f5b7f26a1a&dn=justice-securite&tr=udp%3A%2F%2Ftracker.opentrackr.com%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.gmi.gd%3A6969%2Fannounce&tr=https%3A%2F%2Ftracker.onetracker.net%3A443%2Fannounce) |
+| Santé | [Télécharger](magnet:?xt=urn:btih:5ebaf44e409abc68930256ce4cff98703b5d73cb&dn=sante&tr=udp%3A%2F%2Ftracker.opentrackr.com%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.gmi.gd%3A6969%2Fannounce&tr=https%3A%2F%2Ftracker.onetracker.net%3A443%2Fannounce) |
+| Socio-économie | [Télécharger](magnet:?xt=urn:btih:ac2a7594589ab710253f2b072660f1a16103d0f5&dn=socio-economie&tr=udp%3A%2F%2Ftracker.opentrackr.com%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.gmi.gd%3A6969%2Fannounce&tr=https%3A%2F%2Ftracker.onetracker.net%3A443%2Fannounce) |
+| Technologie et numérique | [Télécharger](magnet:?xt=urn:btih:55404cf102788e661745d7f88f2939b9765048ed&dn=technologie-numerique&tr=udp%3A%2F%2Ftracker.opentrackr.com%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.gmi.gd%3A6969%2Fannounce&tr=https%3A%2F%2Ftracker.onetracker.net%3A443%2Fannounce) |
+| Territoire et géospatial | [Télécharger](magnet:?xt=urn:btih:5b930b0efdc1be3179330e8f4e2410bf1de5da01&dn=territoire-geospatial&tr=udp%3A%2F%2Ftracker.opentrackr.com%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.gmi.gd%3A6969%2Fannounce&tr=https%3A%2F%2Ftracker.onetracker.net%3A443%2Fannounce) |
+| Tourisme | [Télécharger](magnet:?xt=urn:btih:17f196d16477c77236628a5422266e9563f546ee&dn=tourisme&tr=udp%3A%2F%2Ftracker.opentrackr.com%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.gmi.gd%3A6969%2Fannounce&tr=https%3A%2F%2Ftracker.onetracker.net%3A443%2Fannounce) |
+| Transport | [Télécharger](magnet:?xt=urn:btih:bf09cbea552ec6eff9cc595125700d907c4e13a7&dn=transport&tr=udp%3A%2F%2Ftracker.opentrackr.com%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.gmi.gd%3A6969%2Fannounce&tr=https%3A%2F%2Ftracker.onetracker.net%3A443%2Fannounce) |
+
+Ouvrir un lien dans un client BitTorrent compatible ou télécharger directement
+le fichier `.torrent` correspondant depuis la release. Vérifier les fichiers de
+publication avec `sha256sum -c SHA256SUMS`.
 
 ## Environnement de référence
 
@@ -33,7 +65,7 @@ tools/verify/verify-downloads.{sh,py}  contrôle d’intégrité
 tools/repair/repair-downloads.{sh,py}  audit et réparation ciblée
 tools/migrate/migrate-destinations.{sh,py}  migration après renommage
 tools/licenses/audit-licenses.{sh,py}  audit avant redistribution
-tools/torrents/                    préparation et création des torrents
+tools/torrents/                    outils internes de diffusion
 tools/catalog/build-remote-catalog.{sh,py}  catalogue des services non archivables
 tools/fouille-datagouv.sh         exemple de campagne de recherche
 README.md                        politique et procédure reproductible
@@ -363,86 +395,10 @@ restantes en lots bornés et en décisions versionnées :
 ./tools/licenses/review-publication.sh
 ```
 
-La préparation d'une release consulte ce dernier registre et ne retient que les
-datasets dont le statut final est `APPROVED`. Les entrées `HOLD`, `EXCLUDE` et
-les blocages automatiques ne peuvent donc pas entrer dans un nouveau torrent.
-Elle refuse également de continuer tant que `review_complete` n'est pas vrai
-dans le résumé de revue. Ce contrôle clôt la revue, mais ne vaut pas autorisation
-de publication sur un service externe.
-
-Préparer ensuite une release conservatrice par liens physiques, sans recopier
-les données, puis générer un torrent sans tracker par domaine :
-
-```bash
-./tools/torrents/prepare-release.sh datagouv-2026-09-06 --execute
-./tools/torrents/create-torrents.sh datagouv-2026-09-06
-```
-
-La release exclut les licences à revoir, les accès non ouverts, les fiches sans
-producteur attribuable et tout dataset signalé par l'heuristique de données
-personnelles. Chaque domaine contient un
-répertoire `_METADATA/` avec son attribution filtrée et une notice ; ces preuves
-font donc partie du contenu signé par le torrent. Les torrents restent marqués
-comme non approuvés et ne doivent pas être publiés avant revue humaine. Une
-ancienne release dépourvue de `_METADATA/` doit être recréée sous un nouvel
-identifiant, jamais modifiée sur place. La création est reprenable : un torrent
-existant et lisible par `transmission-show` est conservé, tandis qu'un fichier
-`.torrent.part` incomplet est recalculé.
-
-Construire ensuite l'index public et les liens magnet :
-
-```bash
-./tools/torrents/build-index.sh datagouv-2026-09-06-reviewed-final-v1
-```
-
-Après l'accord humain explicite, consigner l'identité de l'approbateur et
-finaliser les métadonnées publiques sans modifier les infohashes :
-
-```bash
-./tools/torrents/approve-publication.sh \
-    datagouv-2026-09-06-reviewed-final-v1 \
-    --approver "Florian MAILLARD" --execute
-```
-
-L'approbation est ajoutée à `reviews/publication-approvals.tsv`. Le script met à
-jour `RELEASE.json`, les notices et commentaires publics, régénère l'index et
-`SHA256SUMS`, puis refuse l'opération si un infohash change.
-
-Ajouter les trackers publics versionnés dans `tools/torrents/public-trackers.txt`
-aux fichiers torrent et aux torrents déjà chargés dans Transmission :
-
-```bash
-./tools/torrents/add-trackers.sh \
-    datagouv-2026-09-06-reviewed-final-v1 --execute
-```
-
-Le script contrôle que chaque infohash reste inchangé, demande une nouvelle
-annonce et régénère les liens magnet et `SHA256SUMS`.
-
-Préparer Transmission sans démarrer le partage, puis le démarrer séparément :
-
-```bash
-./tools/torrents/stage-seed-data.sh datagouv-2026-09-06-reviewed-final-v1
-sudo ./tools/torrents/stage-seed-data.sh \
-    datagouv-2026-09-06-reviewed-final-v1 --execute
-./tools/torrents/seed-release.sh datagouv-2026-09-06-reviewed-final-v1
-./tools/torrents/seed-release.sh datagouv-2026-09-06-reviewed-final-v1 --execute
-# après la fin des vérifications :
-./tools/torrents/seed-release.sh datagouv-2026-09-06-reviewed-final-v1 --verify-only
-# lorsque les 14 torrents affichent 100 % :
-./tools/torrents/seed-release.sh datagouv-2026-09-06-reviewed-final-v1 --start
-```
-
-La copie de seed est indépendante : le script refuse une destination existante,
-contrôle une réserve d'espace de 10 %, utilise les reflinks seulement si le
-système de fichiers les prend en charge, puis vérifie que les inodes diffèrent.
-Cette séparation empêche Transmission de modifier les liens physiques de la
-release et, par conséquent, les fichiers bruts.
-
-Le RPC vise `localhost:9091` par défaut. Utiliser `TRANSMISSION_RPC` pour une
-autre adresse et `TR_AUTH` pour les identifiants sans les exposer dans la ligne
-de commande. Le plafond initial vaut 20 000 kB/s; le modifier avec
-`TRANSMISSION_UPLOAD_KBPS`. Ne jamais exposer le RPC Transmission sur Internet.
+La sélection diffusée ne retient que les datasets dont le statut final est
+`APPROVED`. Les entrées `HOLD`, `EXCLUDE`, les licences à revoir, les accès non
+ouverts et les blocages automatiques en sont exclus. L’approbation humaine de la
+diffusion est consignée dans `reviews/publication-approvals.tsv`.
 
 ## 10. Figer une campagne auditable
 
