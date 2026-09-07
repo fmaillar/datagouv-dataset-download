@@ -1,0 +1,4 @@
+udp://tracker.opentrackr.com:1337/announce
+udp://open.stealth.si:80/announce
+udp://tracker.gmi.gd:6969/announce
+https://tracker.onetracker.net:443/announce

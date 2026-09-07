@@ -408,6 +408,17 @@ L'approbation est ajoutée à `reviews/publication-approvals.tsv`. Le script met
 jour `RELEASE.json`, les notices et commentaires publics, régénère l'index et
 `SHA256SUMS`, puis refuse l'opération si un infohash change.
 
+Ajouter les trackers publics versionnés dans `tools/torrents/public-trackers.txt`
+aux fichiers torrent et aux torrents déjà chargés dans Transmission :
+
+```bash
+./tools/torrents/add-trackers.sh \
+    datagouv-2026-09-06-reviewed-final-v1 --execute
+```
+
+Le script contrôle que chaque infohash reste inchangé, demande une nouvelle
+annonce et régénère les liens magnet et `SHA256SUMS`.
+
 Préparer Transmission sans démarrer le partage, puis le démarrer séparément :
 
 ```bash
