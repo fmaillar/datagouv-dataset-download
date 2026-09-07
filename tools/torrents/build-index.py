@@ -69,12 +69,18 @@ def main() -> int:
         "".join(f"{row['domain']}\t{row['magnet']}\n" for row in rows),
         encoding="utf-8",
     )
+    publication_notice = (
+        "Publication externe approuvée. Vérifier `SHA256SUMS`, `RELEASE.json` "
+        "et `ATTRIBUTION.tsv` avant utilisation.\n\n"
+        if metadata.get("publication_approved") is True
+        else "Publication externe non approuvée. Vérifier `SHA256SUMS`, `RELEASE.json` "
+        "et `ATTRIBUTION.tsv` avant diffusion.\n\n"
+    )
     lines = [
         f"# {args.release_id}\n\n",
         f"{metadata['datasets_selected']} datasets, {metadata['files']} fichiers, ",
         f"{metadata['logical_bytes'] / 1024**3:.2f} Gio.\n\n",
-        "Publication externe non approuvée. Vérifier `SHA256SUMS`, `RELEASE.json` ",
-        "et `ATTRIBUTION.tsv` avant diffusion.\n\n",
+        publication_notice,
         "| Domaine | Torrent | SHA-256 | Magnet |\n",
         "|---|---|---|---|\n",
     ]

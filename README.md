@@ -395,6 +395,19 @@ Construire ensuite l'index public et les liens magnet :
 ./tools/torrents/build-index.sh datagouv-2026-09-06-reviewed-final-v1
 ```
 
+Après l'accord humain explicite, consigner l'identité de l'approbateur et
+finaliser les métadonnées publiques sans modifier les infohashes :
+
+```bash
+./tools/torrents/approve-publication.sh \
+    datagouv-2026-09-06-reviewed-final-v1 \
+    --approver "Florian MAILLARD" --execute
+```
+
+L'approbation est ajoutée à `reviews/publication-approvals.tsv`. Le script met à
+jour `RELEASE.json`, les notices et commentaires publics, régénère l'index et
+`SHA256SUMS`, puis refuse l'opération si un infohash change.
+
 Préparer Transmission sans démarrer le partage, puis le démarrer séparément :
 
 ```bash
